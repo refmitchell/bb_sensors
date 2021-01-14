@@ -43,7 +43,7 @@ public:
   word getRawAngle();
   word getScaledAngle();
 
-  word getSpeed();
+  double getSpeed();
 
   int  detectMagnet();
   int  getMagnetStrength();

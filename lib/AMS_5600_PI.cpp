@@ -267,14 +267,14 @@ word AMS_5600::getRawAngle()
                 then uses the absolute difference between the two
                 measurements to give the speed in degrees/second.
  */
-word AMS_5600::getSpeed()
+double AMS_5600::getSpeed()
 {
-  int first_measurement, second_measurement;
+  double first_measurement, second_measurement;
   first_measurement = this->getRawAngle()*0.087;
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
   second_measurement = this->getRawAngle()*0.087;
 
-  return std::abs(second_measurement - first_measurement) * 10;
+  return std::fabs(second_measurement - first_measurement) * 10;
 }
 
 
