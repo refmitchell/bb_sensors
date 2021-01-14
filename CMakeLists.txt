@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   roscpp
   OpenCV
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
