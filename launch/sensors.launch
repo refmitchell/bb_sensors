@@ -1,0 +1,4 @@
+<launch>
+<node name="camera" pkg="bb_sensors" type="camera"/>
+<node name="wind" pkg="bb_sensors" type="i2c_mux"/>
+</launch>

@@ -127,8 +127,17 @@ ${OpenCV_INCLUDE_DIRS}
 add_library(
   AMS_5600
   lib/AMS_5600_PI.cpp
- )
+  )
 
+add_library(
+  POL_OP
+  lib/POL_OP.cpp
+  )
+
+add_library(
+  ADS122C04
+  lib/ADS122C04_ADC_PI.cpp
+  )
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -140,6 +149,7 @@ add_library(
 # add_executable(${PROJECT_NAME}_node src/capture_node.cpp)
 add_executable(camera src/camera.cpp)
 add_executable(i2c_mux src/i2c_mux.cpp)
+add_executable(pol_op_read src/pol_op_read.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -151,6 +161,7 @@ add_executable(i2c_mux src/i2c_mux.cpp)
 ## same as for the library above
 add_dependencies(camera ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(i2c_mux ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(pol_op_read ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(camera
@@ -161,6 +172,14 @@ target_link_libraries(camera
 target_link_libraries(
   i2c_mux
   AMS_5600
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBS}
+  )
+
+target_link_libraries(
+  pol_op_read
+  ADS122C04
+  POL_OP
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
 )
