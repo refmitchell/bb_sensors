@@ -84,17 +84,11 @@ bool SFE_ADS122C04::begin(uint8_t deviceAddress, std::string bus)
       std::exit(1);
   }
 
+  // Get functionality flags
   unsigned long funcs;
-
   if (ioctl(_i2c_fd, I2C_FUNCS, &funcs) < 0){
     LOG("Failed to read I2C functionality.");
     exit(1);
-  }
-
-  if (funcs & I2C_FUNC_SMBUS_READ_I2C_BLOCK){
-    LOG("Block data supported");
-  }else{
-    LOG("Fuck");
   }
 
   reset(); // reset the ADS122C04 (datasheet says we should do this)
@@ -252,6 +246,24 @@ bool SFE_ADS122C04::configureADCmode(uint8_t wire_mode, uint8_t rate)
     initParams.routeIDAC2 = ADS122C04_IDAC2_DISABLED; // Disable IDAC2
     _wireMode = ADS122C04_RAW_MODE; // Update the wire mode
   }
+  else if (wire_mode == ADS122C04_POL_OP_MODE)
+    {
+      initParams.inputMux = ADS122C04_MUX_AIN1_AIN0;
+      initParams.gainLevel = ADS122C04_GAIN_1; // May change step size
+      initParams.pgaBypass = ADS122C04_PGA_ENABLED; // PGA should be enabled.
+      initParams.dataRate = rate;
+      initParams.opMode = ADS122C04_OP_MODE_NORMAL;
+      initParams.convMode = ADS122C04_CONVERSION_MODE_SINGLE_SHOT; // May change to continuous (DCNT)
+      initParams.selectVref = ADS122C04_VREF_INTERNAL; // Might be an issue
+      initParams.tempSensorEn = ADS122C04_TEMP_SENSOR_OFF;
+      initParams.dataCounterEn = ADS122C04_DCNT_DISABLE;
+      initParams.dataCRCen = ADS122C04_CRC_DISABLED;
+      initParams.burnOutEn = ADS122C04_BURN_OUT_CURRENT_OFF;
+      initParams.idacCurrent = ADS122C04_IDAC_CURRENT_OFF;
+      initParams.routeIDAC1 = ADS122C04_IDAC1_DISABLED;
+      initParams.routeIDAC2 = ADS122C04_IDAC2_DISABLED;
+      _wireMode = ADS122C04_POL_OP_MODE;
+    }
   else
   {
     if (_printDebug == true)
@@ -878,9 +890,13 @@ bool SFE_ADS122C04::ADS122C04_init(ADS122C04_initParam *param)
   bool ret_val = true; // Flag to show if the four writeRegs were successful
   // (If any one writeReg returns false, ret_val will be false)
   ret_val &= ADS122C04_writeReg(ADS122C04_CONFIG_0_REG, ADS122C04_Reg.reg0.all);
+  LOG(ret_val);
   ret_val &= ADS122C04_writeReg(ADS122C04_CONFIG_1_REG, ADS122C04_Reg.reg1.all);
+  LOG(ret_val);
   ret_val &= ADS122C04_writeReg(ADS122C04_CONFIG_2_REG, ADS122C04_Reg.reg2.all);
+  LOG(ret_val);
   ret_val &= ADS122C04_writeReg(ADS122C04_CONFIG_3_REG, ADS122C04_Reg.reg3.all);
+  LOG(ret_val);
 
   // Read and print the new configuration (if enableDebugging has been called)
   printADS122C04config();
@@ -1008,10 +1024,10 @@ bool SFE_ADS122C04::ADS122C04_sendCommandWithValue(uint8_t command, uint8_t valu
 // and is returned in the 24 lowest bits of the uint32_t conversionData.
 // Hence it will always appear positive.
 // Higher functions will need to take care of converting it to (e.g.) float or int32_t.
-
-//* NOT YET SUPPORTED FOR RPi *//
-bool SFE_ADS122C04::ADS122C04_getConversionDataWithCount(                                                            uint32_t *conversionData, uint8_t *count)
-{
+bool SFE_ADS122C04::ADS122C04_getConversionDataWithCount(
+                                                         uint32_t *conversionData,
+                                                         uint8_t *count
+                                                         ){
   uint8_t RXByte_s = 5;
   uint8_t RXByte[RXByte_s] = {0};
 
@@ -1044,12 +1060,8 @@ bool SFE_ADS122C04::ADS122C04_getConversionDataWithCount(                       
 // Higher functions will need to take care of converting it to (e.g.) float or int32_t.
 bool SFE_ADS122C04::ADS122C04_getConversionData(uint32_t *conversionData)
 {
-  // Not documented but I think this is meant to be called only if DCNT is
-  // disabled. If DCNT is disabeld then the counter is not returned, otherwise
-  // there will be an preceeding byte with the counter.
-
   uint8_t RXByte_s = 3;
-  uint8_t RXByte[RXByte_s] = {0,0};
+  uint8_t RXByte[RXByte_s] = {0, 0, 0};
 
   int read = i2c_smbus_read_i2c_block_data(_i2c_fd, ADS122C04_RDATA_CMD, RXByte_s, RXByte);
 
@@ -1058,24 +1070,12 @@ bool SFE_ADS122C04::ADS122C04_getConversionData(uint32_t *conversionData)
     return false;
   }
 
-  // // RXByte[0] should be the number of bytes read. If 4, then DCNT
-  // // is enabled and the data counter should be discarded.
-  // if (RXByte[0] == 4){
-  //   LOG("Conversion without count requested"
-  //   " but appears to be enabled. Data counter discarded.");
-  //   *conversionData =
-  //     ((uint32_t)RXByte[4]) |
-  //     ((uint32_t)RXByte[3]<<8) |
-  //     ((uint32_t)RXByte[2]<<16);
-  //   return true;
-  // }
-
   // Otherwise the counter is disabled and the data is in the correct place.
   // Last element should be empty.
   *conversionData =
-    ((uint32_t)RXByte[3]) |
-    ((uint32_t)RXByte[2]<<8) |
-    ((uint32_t)RXByte[1]<<16);
+    ((uint32_t)RXByte[2]) |
+    ((uint32_t)RXByte[1]<<8) |
+    ((uint32_t)RXByte[0]<<16);
 
   return true;
 }

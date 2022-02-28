@@ -12,20 +12,23 @@
 class POL_OP
 {
 private:
+  uint8_t channel = 0;
   SFE_ADS122C04 A2Ds[2];
 
   // Placeholder
-  uint32_t read_raw_data(SFE_ADS122C04 A2D);
+  uint32_t read_raw_data(SFE_ADS122C04 A2D, uint8_t delay=100);
 
 public:
   // Do all i2c initialisation here.
   POL_OP(std::string i2c_bus = "/dev/i2c-1",
          uint8_t A2D1_addr = 0x40,
          uint8_t A2D2_addr = 0x41,
-         bool debug = false);
+         bool debug = false,
+         uint8_t channel = 0);
 
-  bool read_sensor(uint32_t* readings);
-  bool read_A2D(uint8_t idx, uint32_t* readings);
+  bool read_sensor(uint32_t* readings, uint8_t delay=100);
+  bool read_A2D(uint8_t idx, uint32_t* readings, uint8_t delay=100);
+  uint8_t get_channel();
 };
 
 #endif

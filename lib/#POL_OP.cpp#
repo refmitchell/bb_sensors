@@ -67,6 +67,7 @@ POL_OP::POL_OP(std::string i2c_bus,
 // }
 
 uint32_t POL_OP::read_raw_data(SFE_ADS122C04 A2D, uint8_t delay){
+  // Continuous version
   std::this_thread::sleep_for(std::chrono::milliseconds(delay));
   A2D.start(); // Start conversion
 

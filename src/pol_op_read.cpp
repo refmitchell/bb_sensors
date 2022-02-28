@@ -29,11 +29,17 @@ int main(int argc, char **argv){
   // Broadcast outputs from connected encoders
   ros::Rate loop_rate(10);
   while(ros::ok()) {
-    uint32_t out_1[2];
-    uint32_t out_2[2];
-    po.read_A2D(0,out_1);
-    po.read_A2D(1,out_2);
+    uint32_t readings[4];
+    bool succcess = po.read_sensor(readings);
+
     std::stringstream outstr;
+    outstr <<
+      "Readings: \n";
+    for (int i = 0; i < 4; i++){
+      outstr << "R" << i+1 << ": " << (int) readings[i] << "\n";
+    }
+    ROS_INFO(outstr.str().c_str());
+
     ros::spinOnce();
     loop_rate.sleep();
   }

@@ -1,5 +1,5 @@
 /*
-  ROS Node to read from the I2C mux and broadcast the results
+  ROS Node to read from the I2C mux and broadcast the results 
   to the rest of the network.
 */
 
@@ -25,6 +25,7 @@ extern "C" {
 #define MUX_ADDR 0x70
 #define ENC_ONE_CHANNEL 0
 #define ENC_TWO_CHANNEL 1
+
 
 int init_mux(std::string bus){
   int fd;
@@ -80,7 +81,7 @@ int main(int argc, char **argv){
   // Setup - Initialise any I2C devices in use here.
   //
   AMS_5600 e1(ENC_ONE_CHANNEL); // Wired to channel 0
-  AMS_5600 e2(ENC_TWO_CHANNEL); // Wired to channel 1
+  AMS_5600 e2(ENC_TWO_CHANNEL); // Wired to channel 1 
 
   std::string bus = "/dev/i2c-1";
 
