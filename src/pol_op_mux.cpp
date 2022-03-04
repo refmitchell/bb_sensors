@@ -19,13 +19,17 @@ extern "C" {
 #include "bb_sensors/POL_OP.hpp"
 
 #include "ros/ros.h"
-#include "std_msgs/UInt32MultiArray.h"
+#include "std_msgs/Int32MultiArray.h"
 
 #define LOG(x) std::cout << x << std::endl
 
 #define MUX_ADDR 0x70
 #define A2D_ADDR_1 0x40
 #define A2D_ADDR_2 0x41
+
+// Parameter server values
+std::string adc_conversion_mode;
+int pd_read_dly;
 
 int init_mux(std::string bus){
   int fd;
@@ -47,9 +51,21 @@ bool select_channel(const uint8_t channel, const int fd){
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
+bool param_check(ros::NodeHandle& n){
+  return false;
+}
+
+
+void initialise(ros::NodeHandle& n,
+                std::vector<POL_OP>& pol_ops,
+                int n_pol_ops){
+  return;
+}
+
 int main(int argc, char **argv){
   ros::init(argc, argv, "i2c_mux_pol_op");
   ros::NodeHandle n;
+
 
   //
   // Setup - Initialise any I2C devices in use here.
@@ -71,28 +87,28 @@ int main(int argc, char **argv){
     std::stringstream name;
     name << "pol_op_" << i;
     ros::Publisher poi_pub =
-      n.advertise<std_msgs::UInt32MultiArray>(name.str().c_str(), 1000);
+      n.advertise<std_msgs::Int32MultiArray>(name.str().c_str(), 1000);
     pubs.push_back(poi_pub);
     pol_ops.push_back(poi);
   }
 
   // Broadcast outputs from connected encoders
-  ros::Rate loop_rate(10);
+  ros::Rate loop_rate(20);
 
   while(ros::ok()) {
+    bool reinit = param_check(n);
     int s_readings = 4;
-    uint32_t readings[s_readings];
+    int readings[s_readings];
     for (int i = 0; i < n_pol_ops; i++){
       for (int j = 0; j < s_readings; j++) readings[j] = 0; // Clear readings
-
       // Read from pol_op
       select_channel(i, fd);
       std::this_thread::sleep_for(std::chrono::milliseconds(5));
-      bool success = pol_ops[i].read_sensor(readings);
-      std::vector<uint32_t> res(readings, readings+s_readings);
+      bool success = pol_ops[i].read_sensor(readings, 1);
+      std::vector<int> res(readings, readings+s_readings);
 
       // Publish photodiode data on the correct topic.
-      std_msgs::UInt32MultiArray msg;
+      std_msgs::Int32MultiArray msg;
       msg.data = res;
       pubs[i].publish(msg);
     }

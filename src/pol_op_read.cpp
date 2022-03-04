@@ -29,7 +29,7 @@ int main(int argc, char **argv){
   // Broadcast outputs from connected encoders
   ros::Rate loop_rate(10);
   while(ros::ok()) {
-    uint32_t readings[4];
+    int readings[4];
     bool succcess = po.read_sensor(readings);
 
     std::stringstream outstr;

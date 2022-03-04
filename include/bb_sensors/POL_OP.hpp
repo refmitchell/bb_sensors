@@ -17,6 +17,7 @@ private:
 
   // Placeholder
   uint32_t read_raw_data(SFE_ADS122C04 A2D, uint8_t delay=100);
+  uint32_t read_continuous(SFE_ADS122C04 A2D, uint8_t delay=100);
 
 public:
   // Do all i2c initialisation here.
@@ -26,7 +27,7 @@ public:
          bool debug = false,
          uint8_t channel = 0);
 
-  bool read_sensor(uint32_t* readings, uint8_t delay=100);
+  bool read_sensor(int *readings, uint8_t delay=100);
   bool read_A2D(uint8_t idx, uint32_t* readings, uint8_t delay=100);
   uint8_t get_channel();
 };

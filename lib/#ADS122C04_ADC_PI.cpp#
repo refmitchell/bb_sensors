@@ -249,11 +249,10 @@ bool SFE_ADS122C04::configureADCmode(uint8_t wire_mode, uint8_t rate)
   else if (wire_mode == ADS122C04_POL_OP_MODE)
     {
       initParams.inputMux = ADS122C04_MUX_AIN1_AIN0;
-      initParams.gainLevel = ADS122C04_GAIN_1; // May change step size
-      //initParams.gainLevel = ADS122C04_GAIN_8; // May change step size
+      //initParams.gainLevel = ADS122C04_GAIN_1; // May change step size (SGLUX < 4)
+      initParams.gainLevel = ADS122C04_GAIN_8; // May change step size
       initParams.pgaBypass = ADS122C04_PGA_ENABLED; // PGA should be enabled.
       initParams.dataRate = rate;
-      LOG((int) rate);
       initParams.opMode = ADS122C04_OP_MODE_NORMAL;
       initParams.convMode = ADS122C04_CONVERSION_MODE_CONTINUOUS; // May change to continuous (DCNT)
       initParams.selectVref = ADS122C04_VREF_INTERNAL; // Might be an issue
