@@ -31,7 +31,7 @@ extern "C" {
 #include <cmath> // std::abs
 
 
-#include "bb_sensors/TCA9548/AMS_5600_PI.hpp"
+#include "bb_sensors/AMS_5600_PI.hpp"
 
 /****************************************************
 /* Method: AMS_5600

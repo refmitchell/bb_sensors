@@ -15,7 +15,7 @@ extern "C" {
 #include <thread>
 #include <sstream>
 
-#include "bb_sensors/TCA9548/AMS_5600_PI.hpp"
+#include "bb_sensors/AMS_5600_PI.hpp"
 
 #include "ros/ros.h"
 #include "std_msgs/Float64.h"
