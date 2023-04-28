@@ -154,8 +154,9 @@ int main(int argc, char **argv){
       select_channel(i, fd);
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
-      // Min working delay = 25
-      bool success = pol_ops[i].read_sensor_interleaved(readings, 11);
+      // Min working delay = 25; 11ms was used for pol experiments
+      // before this was known.
+      bool success = pol_ops[i].read_sensor_interleaved(readings, 25);
 
       std::vector<int> res(readings, readings+s_readings);
 
