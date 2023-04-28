@@ -1,4 +1,5 @@
 #define DEBUG 0
+#define CAMERA_RES 64
 
 #include <ros/ros.h>
 #include <image_transport/image_transport.h>
@@ -27,8 +28,14 @@ int main(int argc, char *argv[]){
     return -1;
   }
 
-  cap.set(cv::CAP_PROP_FRAME_WIDTH, 96);
-  cap.set(cv::CAP_PROP_FRAME_HEIGHT, 96);
+  // cap.set(cv::CAP_PROP_FRAME_WIDTH, 96);
+  // cap.set(cv::CAP_PROP_FRAME_HEIGHT, 96);
+
+  // Comment these lines to capture at full resolution
+  // (probably only worth it for testing).
+  cap.set(cv::CAP_PROP_FRAME_WIDTH, CAMERA_RES);
+  cap.set(cv::CAP_PROP_FRAME_HEIGHT, CAMERA_RES);
+
 
   // Capture convert and publish images
   ROS_INFO("Publishing...");

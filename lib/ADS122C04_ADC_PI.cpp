@@ -253,9 +253,9 @@ bool SFE_ADS122C04::configureADCmode(uint8_t wire_mode, uint8_t rate)
       //initParams.gainLevel = ADS122C04_GAIN_8; // May change step size
       initParams.pgaBypass = ADS122C04_PGA_ENABLED; // PGA should be enabled.
       initParams.dataRate = rate;
-      LOG((int) rate);
       initParams.opMode = ADS122C04_OP_MODE_NORMAL;
       initParams.convMode = ADS122C04_CONVERSION_MODE_CONTINUOUS; // May change to continuous (DCNT)
+      //initParams.convMode = ADS122C04_CONVERSION_MODE_SINGLE_SHOT; // May change to continuous (DCNT)
       initParams.selectVref = ADS122C04_VREF_INTERNAL; // Might be an issue
       initParams.tempSensorEn = ADS122C04_TEMP_SENSOR_OFF;
       initParams.dataCounterEn = ADS122C04_DCNT_DISABLE;
@@ -274,6 +274,7 @@ bool SFE_ADS122C04::configureADCmode(uint8_t wire_mode, uint8_t rate)
     }
     return(false);
   }
+  lastInitParams = initParams; // Record last init params
   return(ADS122C04_init(&initParams)); // Configure the chip
 }
 
@@ -1052,14 +1053,15 @@ bool SFE_ADS122C04::ADS122C04_getConversionDataWithCount(
 }
 
 // Read the conversion result.
-// The conversion result is 24-bit two's complement (signed)
-// and is returned in the 24 lowest bits of the uint32_t conversionData.
+// MODIFIED FOR THE ADS112C04 INSTEAD OF ADS122C04
+// The 112 provides 16 bits, not 24. Again, two's complement and still
+// needs sign extended.
 // Hence it will always appear positive.
 // Higher functions will need to take care of converting it to (e.g.) float or int32_t.
 bool SFE_ADS122C04::ADS122C04_getConversionData(uint32_t *conversionData)
 {
-  uint8_t RXByte_s = 3;
-  uint8_t RXByte[RXByte_s] = {0, 0, 0};
+  uint8_t RXByte_s = 2;
+  uint8_t RXByte[RXByte_s] = {0, 0};
 
   int read = i2c_smbus_read_i2c_block_data(_i2c_fd, ADS122C04_RDATA_CMD, RXByte_s, RXByte);
 
@@ -1071,9 +1073,21 @@ bool SFE_ADS122C04::ADS122C04_getConversionData(uint32_t *conversionData)
   // Otherwise the counter is disabled and the data is in the correct place.
   // Last element should be empty.
   *conversionData =
-    ((uint32_t)RXByte[2]) |
-    ((uint32_t)RXByte[1]<<8) |
-    ((uint32_t)RXByte[0]<<16);
+    ((uint32_t)RXByte[1]) |
+    ((uint32_t)RXByte[0]<<8);
+
+  // int secd = (int) *conversionData;//(((int) *conversionData) << 16) >> 16;
+  // LOG("Conversion data " << secd);
 
   return true;
+}
+
+// Expose init parmeters
+ADS122C04_initParam* SFE_ADS122C04::getCurrentInitParams(){
+  return &lastInitParams;
+}
+
+// Update chip configuration
+bool SFE_ADS122C04::reinitialise(){
+  return ADS122C04_init(&lastInitParams);
 }

@@ -28,8 +28,11 @@ public:
          uint8_t channel = 0);
 
   bool read_sensor(int *readings, uint8_t delay=100);
+  bool read_sensor_interleaved(int *readings, uint8_t delay=100);
   bool read_A2D(uint8_t idx, uint32_t* readings, uint8_t delay=100);
   uint8_t get_channel();
+  bool set_gain(uint8_t gain);
+  bool set_data_rate(uint8_t rate);
 };
 
 #endif

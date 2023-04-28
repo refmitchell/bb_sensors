@@ -328,7 +328,7 @@ public:
   // Default to using 'safe' settings (disable the IDAC current sources)
   // Configure the chip for the chosen mode
   bool configureADCmode(uint8_t wire_mode = ADS122C04_RAW_MODE,
-                           uint8_t rate = ADS122C04_DATA_RATE_20SPS);
+                        uint8_t rate = ADS122C04_DATA_RATE_20SPS);
 
   // Default to using 'safe' settings (disable the IDAC current sources)
 
@@ -378,6 +378,15 @@ public:
   uint8_t getDeviceAddress(void) { return (_deviceAddress); }
   uint8_t getWireMode(void) { return (_wireMode); }
 
+  // Manual config overrides
+  // Usage:
+  // - Initialise using generic initialisation
+  // - Get initParam struct pointer
+  // - Update desired options
+  // - Reinitialise device (using updated initParam).
+  ADS122C04_initParam* getCurrentInitParams(void);
+  bool reinitialise(void);
+
 private:
   //Variables
   int _i2c_fd;		//The generic connection to user's chosen I2C hardware
@@ -400,6 +409,7 @@ private:
   // One 14-bit LSB equals 0.03125°C
   const float TEMPERATURE_SENSOR_RESOLUTION = 0.03125;
 
+  ADS122C04_initParam lastInitParams; // Retain the last initParam struct.
   ADS122C04Reg_t ADS122C04_Reg; // Global to hold copies of all four configuration registers
 
   void debugPrint(char *message); // print a debug message

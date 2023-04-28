@@ -1,4 +1,6 @@
 #include "bb_sensors/POL_OP.hpp"
+
+#include <sstream>
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -6,6 +8,14 @@
 
 #define LOG(x) std::cout << x << std::endl;
 
+
+/*
+  Sanity note: The ADC on the SkyCompass PCB is the ADS112C04 by Texas
+  Instruments. The library we're using is originally for the
+  ADS122C04. The library has been modified to account for the
+  difference where it matters (112 is 16-bit, 122 is 24) but still
+  refers to 122 as opposed to 112.
+*/
 POL_OP::POL_OP(std::string i2c_bus,
                uint8_t A2D1_addr,
                uint8_t A2D2_addr,
@@ -35,6 +45,7 @@ POL_OP::POL_OP(std::string i2c_bus,
 
     // Start the ADC. Needed for continuous mode, redundant for single-shot
     A2Ds[i].start();
+    A2Ds[i].setInputMultiplexer(ADS122C04_MUX_AIN1_AIN0); //Initialise mux channel
   }
 
   LOG("POL_OP: Init success");
@@ -97,6 +108,14 @@ bool POL_OP::read_A2D(uint8_t idx, uint32_t* readings, uint8_t delay){
   // A2Ds[idx].setInputMultiplexer(ADS122C04_MUX_AIN3_AIN2);
   // readings[1] = read_raw_data(A2Ds[idx]);
 
+  // if (A2Ds[idx].setInputMultiplexer(ADS122C04_MUX_AIN0_AIN1)){
+  //   readings[0] = read_continuous(A2Ds[idx], delay);
+  // }
+
+  // if(A2Ds[idx].setInputMultiplexer(ADS122C04_MUX_AIN2_AIN3)){
+  //   readings[1] = read_continuous(A2Ds[idx], delay);
+  // }
+
   A2Ds[idx].setInputMultiplexer(ADS122C04_MUX_AIN0_AIN1);
   readings[0] = read_continuous(A2Ds[idx], delay);
   A2Ds[idx].setInputMultiplexer(ADS122C04_MUX_AIN2_AIN3);
@@ -118,12 +137,134 @@ bool POL_OP::read_sensor(int *readings, uint8_t delay){
 
   for (int i = 0; i < N_A2Ds; i++){
     // Sign-extended readings
-    readings[i] = (((int) out_1[i]) << 8) >> 8;
-    readings[i+2] = (((int) out_2[i]) << 8) >> 8;
+    readings[i] = (((int) out_1[i]) << 16) >> 16;
+    readings[i+2] =(((int) out_2[i]) << 16) >> 16;
   }
+  std::bitset<32> c_read = readings[0];
+  std::bitset<32> c_read_1 = readings[1];
+
+  // LOG("Reading[0]: " << c_read);
+  // LOG("Reading[1]: " << c_read_1);
 
   // Read successful
   return true;
 }
 
+bool POL_OP::read_sensor_interleaved(int *readings, uint8_t delay){
+  uint32_t out_1[2] = {0,0};
+  uint32_t out_2[2] = {0,0};
+
+  int read_times[4] = {0,0,0,0};
+
+  auto start = std::chrono::system_clock::now();
+  // Reads are interleaved to give the multiplexers a chance to change.
+  out_1[0] = read_continuous(A2Ds[0], delay);
+  auto time = std::chrono::system_clock::now() - start;
+  auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+  read_times[0] = (int) millis.count();
+
+  A2Ds[0].setInputMultiplexer(ADS122C04_MUX_AIN2_AIN3);
+
+  start = std::chrono::system_clock::now();
+  out_2[0] = read_continuous(A2Ds[1], delay);
+  time = std::chrono::system_clock::now() - start;
+  millis = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+  read_times[1] = (int) millis.count();
+
+
+  A2Ds[1].setInputMultiplexer(ADS122C04_MUX_AIN2_AIN3);
+  start = std::chrono::system_clock::now();
+  out_1[1] = read_continuous(A2Ds[0], delay);
+  time = std::chrono::system_clock::now() - start;
+  millis = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+  read_times[2] = (int) millis.count();
+
+  start = std::chrono::system_clock::now();
+  out_2[1] = read_continuous(A2Ds[1], delay);
+  time = std::chrono::system_clock::now() - start;
+  millis = std::chrono::duration_cast<std::chrono::milliseconds>(time);
+  read_times[3] = (int) millis.count();
+
+  // Reset multiplexers to starting position
+  A2Ds[0].setInputMultiplexer(ADS122C04_MUX_AIN1_AIN0);
+  A2Ds[1].setInputMultiplexer(ADS122C04_MUX_AIN1_AIN0);
+
+  std::stringstream ss;
+  ss << "PD read times: [ ";
+  for (int i = 0; i < 4; i++){
+    if (i < 3)
+      ss << read_times[i] << "ms, ";
+    else
+      ss << read_times[i] << "ms ] " << std::endl;
+  }
+
+  std::cout << ss.str();
+
+  // DEBUG - Interleaved read fails for the last POL_OP. WHY?
+  // std::cout << "delay: "  << (int) delay << std::endl;
+  // std::cout << "o1: [" << out_1[0] << ", " << out_1[1] << "]" << std::endl;
+  // std::cout << "o2: [" << out_2[0] << ", " << out_2[1] << "]" << std::endl;
+  // std::cout << "millis: " << millis.count() << std::endl;
+
+
+  for (int i = 0; i < N_A2Ds; i++){
+    // Sign-extended readings
+    readings[i] = (((int) out_1[i]) << 16) >> 16;
+    readings[i+2] =(((int) out_2[i]) << 16) >> 16;
+  }
+  std::bitset<32> c_read = readings[0];
+  std::bitset<32> c_read_1 = readings[1];
+
+  return true;
+}
+
 uint8_t POL_OP::get_channel(){ return this->channel; }
+
+/*
+  Set the PGA gain for the sensor. Note the gain must be a valid 3-bit
+  gain setting for the ADS122C04. Use relevant definitions in
+  ADS122C04_ADC_PI.hpp (ADS122C04_GAIN_X) to ensure valid settings
+  are used. No error checking is included!
+ */
+bool POL_OP::set_gain(uint8_t gain){
+  bool ret = true;
+  for (int i = 0; i < N_A2Ds; i++) {
+    // For each A2D get the most recent initParams, update the
+    // gain and then reinitialise the chip.
+    ADS122C04_initParam* initParams = A2Ds[i].getCurrentInitParams();
+    initParams->gainLevel = gain;
+    ret = ret && A2Ds[i].reinitialise();
+    if (!ret) LOG("Reinitialisation error with ADC " << i+1);
+  }
+
+  if (ret) LOG("POL_OP: Gain set to " << (int) gain << ".");
+  return ret;
+}
+
+
+/*
+Set data rate using presets defined in ADS122_ADC_PI.hpp;
+included below for convenience.
+
+#define ADS122C04_DATA_RATE_20SPS   0x0
+#define ADS122C04_DATA_RATE_45SPS   0x1
+#define ADS122C04_DATA_RATE_90SPS   0x2
+#define ADS122C04_DATA_RATE_175SPS  0x3
+#define ADS122C04_DATA_RATE_330SPS  0x4
+#define ADS122C04_DATA_RATE_600SPS  0x5
+#define ADS122C04_DATA_RATE_1000SPS 0x6
+*/
+bool POL_OP::set_data_rate(uint8_t rate){
+  bool ret = true;
+  for (int i = 0; i < N_A2Ds; i++) {
+    // For each A2D get the most recent initParams, update the
+    // gain and then reinitialise the chip.
+    ADS122C04_initParam* initParams = A2Ds[i].getCurrentInitParams();
+    initParams->dataRate = rate;
+    ret = ret && A2Ds[i].reinitialise();
+    if (!ret) LOG("Reinitialisation error with ADC " << i+1);
+  }
+
+  if (ret) LOG("POL_OP: Data rate set to " << (int) rate << ".");
+  return ret;
+}
