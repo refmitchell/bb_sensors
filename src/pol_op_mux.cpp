@@ -1,6 +1,18 @@
-/*
-  ROS Node to read from the I2C mux and broadcast the results
-  to the rest of the network.
+/**
+   \file pol_op_mux.cpp
+   \brief ROS node to read from the full eight-unit polarisation sensor.
+
+   This node allows the robot to read from the polarisation array constructed
+   for Gkanias et al. (2023). Each polarisation opponent unit is read in sequence
+   using the same multiplexer (TCA9548A) as in the wind sensing node
+   (i2c_mux.cpp).
+
+   \note Each polarisation opponent unit is uses two I2C analogue to digital
+   converters (ADCs). The four photodiodes are split across the two ADCs,
+   meaning we need to read from both to read from all four photodiodes.
+   Hence, two I2C addresses for one unit.
+
+   \author Robert Mitchell
 */
 
 extern "C" {
@@ -24,11 +36,19 @@ extern "C" {
 
 #define LOG(x) std::cout << x << std::endl
 
-#define MUX_ADDR 0x70
-#define A2D_ADDR_1 0x40
-#define A2D_ADDR_2 0x41
+#define MUX_ADDR 0x70 /**< Multiplexer I2C address */
+#define A2D_ADDR_1 0x40 /**< 1st ADC address */
+#define A2D_ADDR_2 0x41 /**< 2nd ADC address */
 
 argparse::ArgumentParser parser("Parser");
+
+/**
+   \brief Initialise the argument parser
+   \param parser The parser object.
+   \param parser argc Passthrough argc from main.
+   \param parser argv Passthrough argv from main.
+   \return `true` on successful initialisation, otherwise `false`
+*/
 bool initParser(argparse::ArgumentParser &parser, int argc, char **argv){
   parser.add_argument()
     .names({"--gain"})
@@ -62,6 +82,13 @@ bool initParser(argparse::ArgumentParser &parser, int argc, char **argv){
   return true;
 }
 
+/**
+   Initialises the multiplexer on the I2C bus. If the initialisation fails then 
+   the node will shut down.
+
+   \param bus The string identifier for the I2C bus, see Linux kernel documentation.
+   \return A file descriptor which can be used to access the multiplexer.
+*/
 int init_mux(std::string bus){
   int fd;
 
@@ -75,6 +102,17 @@ int init_mux(std::string bus){
   return fd;
 }
 
+/**
+   Selects a given channel on the multiplexer and delays to allow time for
+   channel selection to take place.
+
+   Will print a message to stdout if the channel selection fails.
+
+   \param channel The channel (0 - 7) to read from.
+   \param fd The file descriptor used to communicate with the mux
+             on the I2C bus.
+   \note This function does not return any value despite its return type.
+ */
 bool select_channel(const uint8_t channel, const int fd){
   int ret = i2c_smbus_write_byte_data(fd, 0x00, (1 << channel));
   if (ret == -1) {LOG("Failed to select channel");}
@@ -82,7 +120,11 @@ bool select_channel(const uint8_t channel, const int fd){
   std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
+/**
+    Main loop.
+*/
 int main(int argc, char **argv){
+  /* Initialise argparser and set specified parameters. */
   if(!initParser(parser, argc, argv)) return -1;
   if(parser.exists("help")){
     parser.print_help();
@@ -107,19 +149,24 @@ int main(int argc, char **argv){
   ROS_INFO("Gain setting: %d", pga_gain);
   ROS_INFO("Number of POL-OPs: %d", n_pol_ops);
 
+  /* Initialise the ROS node */
   ros::init(argc, argv, "i2c_mux_pol_op");
   ros::NodeHandle n;
 
-  //
-  // Setup - Initialise any I2C devices in use here.
-  //
+  /* Initialise the mux */
   std::string bus = "/dev/i2c-1";
   int fd = init_mux(bus);
 
+  /*
+     Because the number of unit is configurable, we generate two parallel
+     vectors of Publishers and POL_OP objects (i.e. pubs[i] is the Publisher
+     for data read from pol_ops[i]). These vectors are grown to the correct
+     size.
+  */
   std::vector<ros::Publisher> pubs;
   std::vector<POL_OP> pol_ops;
 
-  // Init each pol_op unit and its publisher
+  /* Initialise each unit and its Publisher */
   for (int i = 0; i < n_pol_ops; i++){
     select_channel(i, fd);
     POL_OP poi(bus, A2D_ADDR_1, A2D_ADDR_2, false, i);
@@ -133,15 +180,19 @@ int main(int argc, char **argv){
   }
 
 
-  // Set custom options for each pol_op unit
+  /* Set custom options for each pol_op unit */
   for (int i = 0; i < n_pol_ops; i++){
     pol_ops[i].set_gain(pga_gain);
     pol_ops[i].set_data_rate(data_rate);
   }
 
-  // Broadcast outputs from connected encoders
-  ros::Rate loop_rate(10);
 
+  /*
+     Read from each unit in sequence.
+     Note that the timing code and related output was used to characterise
+     sensor latency and does not have any function.
+  */
+  ros::Rate loop_rate(10);
   auto start = std::chrono::system_clock::now();
   while(ros::ok()) {
     int s_readings = 4;

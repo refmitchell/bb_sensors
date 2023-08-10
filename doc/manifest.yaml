@@ -1,0 +1,17 @@
+actions: []
+authors: ''
+brief: ''
+bugtracker: ''
+depends:
+- image_transport
+- roscpp
+- cv_bridge
+- catkin
+description: The bb_sensors package
+license: TODO
+maintainers: pi <pi@todo.todo>
+msgs: []
+package_type: package
+repo_url: ''
+srvs: []
+url: ''

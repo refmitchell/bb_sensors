@@ -1,3 +1,4 @@
+<!-- Launch turtlebot3 core utilities and beetlebot sensors -->
 <launch>
 <include file="$(find turtlebot3_bringup)/launch/turtlebot3_robot.launch"/>
 <node name="camera" pkg="bb_sensors" type="camera"/>

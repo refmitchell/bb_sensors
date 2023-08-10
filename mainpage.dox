@@ -1,0 +1,220 @@
+/**
+\mainpage
+
+\b bb_sensors provides the nodes and libraries required for reading
+from the sensor system on the beetlebot.
+
+All of this code is designed to be run on-board (i.e. on the Raspberry
+Pi board of the BeetleBot platform). For more information see below, or use the
+file list (drop down menu above).
+
+List of nodes:
+- \b camera
+- \b i2c_mux
+- \b pol_op_mux
+- \b pol_op_read
+
+
+<hr>
+
+<!-- Per-node subsections -->
+
+\section desc Node descriptions
+
+\subsection camera camera
+
+The camera node reads a downsamples image from a connected Raspberry
+Pi camera module and then broadcasts this on the `/frames` topic.
+Image downsampling is set at compile time and cannot be configured
+at run time. If the node starts successfully "Publishing..." will
+be displayed in the terminal window.
+
+\subsubsection Usage
+\verbatim
+$ rosrun bb_sensors camera
+\endverbatim
+
+\subsubsection topics ROS topics
+
+Subscribes to:
+- None
+
+Publishes to:
+- \b `/frames`: [sensor_msgs/Image] Raw image data from the camera.
+
+\subsubsection parameters ROS parameters
+
+This node does not interact with the parameter server.
+
+\subsubsection services ROS services
+This node does not interact with any ROS services.
+
+<!-- END: copy for each node -->
+
+
+\subsection i2c_mux i2c_mux
+
+The i2c_mux node is badly named. This node is reads data from a
+custom-built wind sensor over I2C. The node reads from two AS5600
+magnetic encoders, one of which gives wind speed and the other
+direction. As the encoders are the same, an I2C mux is used to read
+from both in sequence (hence the node name).
+
+\subsubsection Usage
+\verbatim
+$ rosrun bb_sensors i2c_mux
+\endverbatim
+
+Once the node is started, use rostopic list to check that teh
+`wind_speed` and `wind_direction` topics have registered.
+
+\subsubsection topics ROS topics
+
+Subscribes to:
+- None
+
+Publishes to:
+- \b `/wind_speed`: [std_msgs/Float64] wind speed information.
+- \b `/wind_direction`: [std_msgs/Float64] wind direction information (in degrees).
+
+\subsubsection parameters ROS parameters
+This node does not interact with the parameter server.
+
+\subsubsection services ROS services
+This node does not interact with any ROS services.
+
+
+\subsection pol_op_mux pol_op_mux
+
+This node reads from the polarisation sensor constructed for Gkanias
+et al. (2023). The node reads from each polarisation opponent unit in
+sequence and broadcasts the resultant photodiode readings to the network.
+Note that the node does no processing of polarisation and only provides
+the raw photodiode readings.
+
+\subsubsection Usage
+\verbatim
+$ rosrun bb_sensors pol_op_mux -n N
+\endverbatim
+
+`N` is the number of polarisation opponent units in use. The sensor is
+constructed of eight units but the default is `N = 1`.
+
+\note If you are planning to use the polarisation sensor and this read
+code there are two main things to be aware of.
+\note
+1. This code is \b slow; there is a lot of latency in reading from the
+photodiodes and the delays which have been included in the read stages
+are as low as they can be without returning erroneous
+readings.
+2. The polarisation opponent units are read \b in \b sequence and that
+sequence is defined by the hardware (the channel indices on the I2C
+mux). Thus, the order in which individual sensors are read is dictated
+by the channel they are connected to on the I2C mux. You need to
+carefully note which channel each unit is connected to in order to
+correctly compute the position of the sun using the sensor.
+
+
+\subsubsection topics ROS topics
+
+Subscribes to:
+- None
+
+Publishes to:
+- `\pol_op_n`: [std_msgs:Int32MultiArray] An array of
+four photodiode readings from polarisation opponent unit `n`.
+
+\note There will be one topic for each unit (indexed from 0). For
+example, if you start the node with:
+\verbatim
+rosrun bb_sensors pol_op_mux -n 4
+\endverbatim
+Then `/pol_op_0`, `/pol_op_1`, `/pol_op_2`, and `/pol_op_3` should all appear as
+topics.
+
+\subsubsection parameters ROS parameters
+This node does not interact with the parameter server.
+
+\subsubsection services ROS services
+This node does not interact with any ROS services.
+
+\subsection pol_op_read pol_op_read
+
+This is a test node designed to read from a single polarisation
+opponent device (one of those used to construct the polarisation
+sensor described in Gkanias et al. (2023)).
+The node assumes that the unit is wired directly onto the I2C
+bus of the RPi and
+
+\subsubsection Usage
+\verbatim
+$ rosrun bb_sensors pol_op_mux
+\endverbatim
+
+The current working state of this node is unknown as it has not been
+used since the early prototyping stages of polarisation sensor
+development.
+
+\subsubsection topics ROS topics
+This node does not publish or subscribe to any ROS topics.
+
+\subsubsection parameters ROS parameters
+This node does not interact with the parameter server.
+
+\subsubsection services ROS services
+This node does not interact with any ROS services.
+
+\subsubsection Usage
+\verbatim
+$ rosrun bb_sensors pol_op_read
+\endverbatim
+
+The current working state of this node is unknown as it has not been
+used since the early prototyping stages of polarisation sensor
+development.
+
+\subsubsection topics ROS topics
+This node does not publish or subscribe to any ROS topics.
+
+\subsubsection parameters ROS parameters
+This node does not interact with the parameter server.
+
+\subsubsection services ROS services
+This node does not interact with any ROS services.
+
+\subsection pol_op_read pol_op_read
+
+This is a test node designed to read from a single polarisation
+opponent device (one of those used to construct the polarisation
+sensor described in Gkanias et al. (2023)).
+The node assumes that the unit is wired directly onto the I2C
+bus of the RPi and
+
+\subsubsection Usage
+\verbatim
+$ rosrun bb_sensors pol_op_read
+\endverbatim
+
+The current working state of this node is unknown as it has not been
+used since the early prototyping stages of polarisation sensor
+development.
+
+\subsubsection topics ROS topics
+This node does not publish or subscribe to any ROS topics.
+
+\subsubsection parameters ROS parameters
+This node does not interact with the parameter server.
+
+\subsubsection services ROS services
+This node does not interact with any ROS services.
+
+
+
+\section commandline Command-line tools
+No command-line tools are provided by this package
+
+\subsection script_name script_name
+No additional scripts are provided by this package.
+
+
+*/

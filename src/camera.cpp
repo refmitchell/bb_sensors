@@ -1,4 +1,34 @@
+/**
+   \file camera.cpp
+   \brief ROS node which reads from an RPi camera.
+
+   This node reads a downsampled image from a connected RPi camera
+   module and publishes it on the network. OpenCV is used to read from
+   the camera; the resultant CV image is converted to a ROS image
+   pointer for broadcast.
+
+   In theory, this node should read from any connected camera (USB or
+   RPi, so long as there is only one connected) but this has not been
+   tested.
+
+   This node takes no arguments and has no runtime configuration
+   options.
+
+   \warning The image is captured at low resolution rather than
+   performing downsampling later on. This is done for efficiency
+   reasons but it means there is no way to recover a full resolution
+   image. This can be changed by setting the CAMERA_RES definition and
+   re-compiling.
+ */
+
+/**
+    \brief Debug compile flag.
+
+    Set to 1 to generate a video window with the camera output.
+ */
 #define DEBUG 0
+
+/** Camera capture resolution (for a square window). */
 #define CAMERA_RES 64
 
 #include <ros/ros.h>
@@ -28,8 +58,6 @@ int main(int argc, char *argv[]){
     return -1;
   }
 
-  // cap.set(cv::CAP_PROP_FRAME_WIDTH, 96);
-  // cap.set(cv::CAP_PROP_FRAME_HEIGHT, 96);
 
   // Comment these lines to capture at full resolution
   // (probably only worth it for testing).
