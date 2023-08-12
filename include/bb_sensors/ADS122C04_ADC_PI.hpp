@@ -1,25 +1,42 @@
-/*
-  This is a library written for the TI ADS122C04
-  24-Bit 4-Channel 2-kSPS Delta-Sigma ADC With I2C Interface
+/**
+   \file ADS122C04_ADC_PI.hpp
+   \brief Declaration of the SFE_ADS122C04 class (and associated macro and type
+          definitions) for interacting with the  ADS112C04 hardware.
 
-  Written by: Paul Clark (PaulZC)
+  This file is based on a library written for the TI ADS122C04
+  24-Bit 4-Channel 2-kSPS Delta-Sigma ADC With I2C Interface.
+  The implementation (ADS122C04_ADC_PI.cpp) has been modified for
+  the 16-bit cousin of the ADS122C04 (namely, the ADS112C04).
+
+  If you need to understand this code, then I recommed going through the
+  datasheet linked below in parallel.
+
+  Original library written by: Paul Clark (PaulZC)
   Date: May 4th 2020
 
   Modified by: Robert Mitchell (refmitchell)
   Date: 15/02/2022
 
   Reason for modification:
-  Native operation on RPi using Linux i2c headers
-  as opposed to Arduino exclusive Wire.h.
+  Native operation on RPi using Linux i2c headers (as opposed to Arduino exclusive
+  Wire.h) and adaptation for the 16-bit ADS112C04 platform. Modifications to this
+  header are minimal.
 
   Based on: https://github.com/sparkfun/SparkFun_ADS122C04_ADC_Arduino_Library
+  (written for the 24-bit ADS122C04 for use with an Arduino).
 
-  Based on the TI datasheet:
-  https://www.ti.com/product/ADS122C04
-  https://www.ti.com/lit/ds/symlink/ads122c04.pdf
+  Also see the TI datasheet:
+  https://www.ti.com/product/ADS112C04
+  https://www.ti.com/lit/ds/symlink/ads112c04.pdf
 
+  Software made available under the MIT license (included in the source code).
+*/
+
+/*
   The MIT License (MIT)
+
   Copyright (c) 2020 SparkFun Electronics
+
   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
   associated documentation files (the "Software"), to deal in the Software without restriction,
   including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
@@ -288,7 +305,7 @@ typedef struct{
   uint8_t routeIDAC2;
 } ADS122C04_initParam;
 
-// Designed to replace calls to Arduino millis()
+/** Replicates functionality of Arduino millis() function. */
 inline unsigned long _millis(){
   auto time = std::chrono::system_clock::now();
   return std::chrono::duration_cast<std::chrono::milliseconds>(time.time_since_epoch()).count();

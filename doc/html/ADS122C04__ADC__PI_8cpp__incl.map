@@ -1,6 +1,6 @@
 <map id="ADS122C04_ADC_PI.cpp" name="ADS122C04_ADC_PI.cpp">
-<area shape="rect" id="node1" title=" " alt="" coords="492,5,668,32"/>
-<area shape="rect" id="node2" href="$ADS122C04__ADC__PI_8hpp.html" title=" " alt="" coords="25,80,191,121"/>
+<area shape="rect" id="node1" title="Definition of the SFE_ADS122C04 class for interacting with the ADS112C04 hardware." alt="" coords="492,5,668,32"/>
+<area shape="rect" id="node2" href="$ADS122C04__ADC__PI_8hpp.html" title="Declaration of the SFE_ADS122C04 class (and associated macro and type definitions) for interacting wi..." alt="" coords="25,80,191,121"/>
 <area shape="rect" id="node5" title=" " alt="" coords="189,169,251,196"/>
 <area shape="rect" id="node6" title=" " alt="" coords="267,87,371,114"/>
 <area shape="rect" id="node7" title=" " alt="" coords="395,87,483,114"/>

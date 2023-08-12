@@ -1,45 +1,56 @@
-/*
-  This is a library written for the TI ADS122C04
-  24-Bit 4-Channel 2-kSPS Delta-Sigma ADC With I2C Interface
+/**
+   \file ADS122C04_ADC_PI.cpp
+   \brief Definition of the SFE_ADS122C04 class for interacting with the
+          ADS112C04 hardware.
 
-  Written by: Paul Clark (PaulZC)
+  This file is based on a library written for the TI ADS122C04
+  24-Bit 4-Channel 2-kSPS Delta-Sigma ADC With I2C Interface.
+  The implementation (ADS122C04_ADC_PI.cpp) has been modified for
+  the 16-bit cousin of the ADS122C04 (namely, the ADS112C04).
+
+  If you need to understand this code, then I recommed going through the
+  datasheet linked below in parallel.
+
+  Original library written by: Paul Clark (PaulZC)
   Date: May 4th 2020
 
   Modified by: Robert Mitchell (refmitchell)
   Date: 15/02/2022
 
   Reason for modification:
-  Native operation on RPi using Linux i2c headers
-  as opposed to Arduino exclusive Wire.h.
+  Native operation on RPi using Linux i2c headers (as opposed to Arduino exclusive
+  Wire.h) and adaptation for the 16-bit ADS112C04 platform. Modifications to this
+  header are minimal.
 
   Based on: https://github.com/sparkfun/SparkFun_ADS122C04_ADC_Arduino_Library
+  (written for the 24-bit ADS122C04 for use with an Arduino).
 
-  Based on the TI datasheet:
-  https://www.ti.com/product/ADS122C04
-  https://www.ti.com/lit/ds/symlink/ads122c04.pdf
+  Also see the TI datasheet:
+  https://www.ti.com/product/ADS112C04
+  https://www.ti.com/lit/ds/symlink/ads112c04.pdf
 
+  Software made available under the MIT license (included in the source code).
+*/
+
+/*
   The MIT License (MIT)
 
-  Copyright (c) 2020 SparkFun Electronics Permission is hereby
-  granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without
-  limitation the rights to use, copy, modify, merge, publish,
-  distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so, subject
-  to the following conditions:
+  Copyright (c) 2020 SparkFun Electronics
 
-  The above copyright notice and this permission notice shall be
-  included in all copies or substantial portions of the Software.
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+  associated documentation files (the "Software"), to deal in the Software without restriction,
+  including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to
+  do so, subject to the following conditions:
 
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-  NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  SOFTWARE.
+  The above copyright notice and this permission notice shall be included in all copies or substantial
+  portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+  NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 #include "bb_sensors/ADS122C04_ADC_PI.hpp"
@@ -60,13 +71,23 @@ extern "C" {
 #include <thread> // Sleep
 #include <cmath>  // Maths utilities
 
+/** Constructor */
 SFE_ADS122C04::SFE_ADS122C04(void)
 {
   // Constructor
 }
 
-//Attempt communication with the device and initialise it
+//
 //Return true if successful
+
+/**
+    Attempt communication with the device and initialise it.
+
+    \param deviceAddress The I2C address of the target device.
+    \param bus The string identifier of the I2C bus in use (see Linux kernel documentation)
+    \return true if success, false otherwise
+
+*/
 bool SFE_ADS122C04::begin(uint8_t deviceAddress, std::string bus)
 {
   _deviceAddress = deviceAddress; //If provided, store the I2C address from user
@@ -97,7 +118,15 @@ bool SFE_ADS122C04::begin(uint8_t deviceAddress, std::string bus)
   return(configureADCmode(ADS122C04_RAW_MODE));
 }
 
-// Configure the chip for the selected wire mode
+/**
+   Configure the chip for the selected wire mode. Valid wire modes are defined
+   in ADS_122C04_PI.hpp. For the purposes of polarisation sensor operation,
+   a new dedicated wire mode (ADS122C04_POL_OP_MODE) is included.
+
+   \param wire_mode The wire mode setting (see definitions and datasheet).
+   \param rate The data rate to be set on initialisation.
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::configureADCmode(uint8_t wire_mode, uint8_t rate)
 {
   ADS122C04_initParam initParams; // Storage for the chip parameters
@@ -278,18 +307,28 @@ bool SFE_ADS122C04::configureADCmode(uint8_t wire_mode, uint8_t rate)
   return(ADS122C04_init(&initParams)); // Configure the chip
 }
 
-//Enable or disable the printing of debug messages
+/**
+   Enable the printing of debug messages
+*/
 void SFE_ADS122C04::enableDebugging(void)
 {
   _printDebug = true; //Should we print the commands we send? Good for debugging
 }
 
+/**
+   Disable the printing of debug messages
+*/
 void SFE_ADS122C04::disableDebugging(void)
 {
   _printDebug = false; //Turn off extra print statements
 }
 
-//Safely print messages
+/**
+    Print debug messages using LOG macro.
+
+    \note This print function actually functions as a println
+    as LOG includes std::endl at the end of its definition.
+*/
 void SFE_ADS122C04::debugPrint(char *message)
 {
   if (_printDebug == true)
@@ -298,7 +337,9 @@ void SFE_ADS122C04::debugPrint(char *message)
   }
 }
 
-//Safely print messages
+/**
+    Print debug messages using LOG macro.
+*/
 void SFE_ADS122C04::debugPrintln(char *message)
 {
   if (_printDebug == true)
@@ -307,6 +348,11 @@ void SFE_ADS122C04::debugPrintln(char *message)
   }
 }
 
+/**
+   Read the temperature from the on-board temperature sensor in centigrade
+   (celsius).
+   \return The current temperature reading
+*/
 float SFE_ADS122C04::readPT100Centigrade(void) // Read the temperature in Centigrade
 {
   raw_voltage_union raw_v; // union to convert uint32_t to int32_t
@@ -408,13 +454,21 @@ float SFE_ADS122C04::readPT100Centigrade(void) // Read the temperature in Centig
   return(ret_val);
 }
 
+/**
+   Read the temperature in Farenheit.
+   \return The current temperature in Farenheit.
+*/
 float SFE_ADS122C04::readPT100Fahrenheit(void) // Read the temperature in Fahrenheit
 {
   return((readPT100Centigrade() * 1.8) + 32.0); // Read Centigrade and convert to Fahrenheit
 }
 
-// Read the raw signed 24-bit ADC value as int32_t
-// The result needs to be multiplied by VREF / GAIN to convert to Volts
+/**
+   Read the raw signed 16-bit ADC value as int32_t
+   The result needs to be multiplied by VREF / GAIN to convert to Volts
+   \param rate The data rate to be used.
+   \return The raw voltage (note this will need sign extended).
+*/
 int32_t SFE_ADS122C04::readRawVoltage(uint8_t rate)
 {
   raw_voltage_union raw_v; // union to convert uint32_t to int32_t
@@ -485,9 +539,13 @@ int32_t SFE_ADS122C04::readRawVoltage(uint8_t rate)
   return(raw_v.INT32);
 }
 
-// Read the raw signed 24-bit ADC value as uint32_t
-// The ADC data is returned in the least-significant 24-bits
-// Higher functions will need to convert the result to (e.g.) int32_t
+/**
+   Read the raw signed 16-bit ADC value as uint32_t.
+   \warning The ADC data is returned in the least significant 16 bits. The
+   caller will need to sign-extend the result.
+
+   \return The latest digital conversion.
+*/
 uint32_t SFE_ADS122C04::readADC(void)
 {
   uint32_t ret_val; // The return value
@@ -506,6 +564,11 @@ uint32_t SFE_ADS122C04::readADC(void)
 }
 
 // Read the internal temperature
+/**
+   Read the internal temperature
+   \param rate The desired data rate.
+   \return The internal temperature
+*/
 float SFE_ADS122C04::readInternalTemperature(uint8_t rate)
 {
   internal_temperature_union int_temp; // union to convert uint16_t to int16_t
@@ -599,7 +662,12 @@ float SFE_ADS122C04::readInternalTemperature(uint8_t rate)
   return(ret_val);
 }
 
-// Configure the input multiplexer
+
+/**
+   Configure the input multiplexer
+   \param mux_config The desired mux configuration ID, see ADS122C04_ADC_PI.hpp.
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setInputMultiplexer(uint8_t mux_config)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_0_REG, &ADS122C04_Reg.reg0.all)) == false)
@@ -608,7 +676,11 @@ bool SFE_ADS122C04::setInputMultiplexer(uint8_t mux_config)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_0_REG, ADS122C04_Reg.reg0.all));
 }
 
-// Configure the gain
+/**
+   Configure the gain
+   \param gain_config The desired gain configuration ID, see ADS122C04_ADC_PI.hpp.
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setGain(uint8_t gain_config)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_0_REG, &ADS122C04_Reg.reg0.all)) == false)
@@ -617,7 +689,11 @@ bool SFE_ADS122C04::setGain(uint8_t gain_config)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_0_REG, ADS122C04_Reg.reg0.all));
 }
 
-// Enable/disable the Programmable Gain Amplifier
+/**
+   Enable/disable the Programmable Gain Amplifier
+   \param enable Enable/disable setting, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::enablePGA(uint8_t enable)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_0_REG, &ADS122C04_Reg.reg0.all)) == false)
@@ -626,7 +702,11 @@ bool SFE_ADS122C04::enablePGA(uint8_t enable)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_0_REG, ADS122C04_Reg.reg0.all));
 }
 
-// Set the data rate (sample speed)
+/**
+   Set the data rate (sample speed)
+   \param rate The desired rate setting, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setDataRate(uint8_t rate)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all)) == false)
@@ -635,7 +715,11 @@ bool SFE_ADS122C04::setDataRate(uint8_t rate)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_1_REG, ADS122C04_Reg.reg1.all));
 }
 
-// Configure the operating mode (normal / turbo)
+/**
+   Configure the operating mode (normal / turbo)
+   \param mode The desired mode setting, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setOperatingMode(uint8_t mode)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all)) == false)
@@ -644,7 +728,11 @@ bool SFE_ADS122C04::setOperatingMode(uint8_t mode)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_1_REG, ADS122C04_Reg.reg1.all));
 }
 
-// Configure the conversion mode (single-shot / continuous)
+/**
+   Configure the conversion mode (single-shot / continuous)
+   \param mode The desired conversion mode, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setConversionMode(uint8_t mode)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all)) == false)
@@ -653,7 +741,11 @@ bool SFE_ADS122C04::setConversionMode(uint8_t mode)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_1_REG, ADS122C04_Reg.reg1.all));
 }
 
-// Configure the voltage reference
+/**
+   Configure the voltage reference
+   \param ref Set the voltage reference, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setVoltageReference(uint8_t ref)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all)) == false)
@@ -662,7 +754,11 @@ bool SFE_ADS122C04::setVoltageReference(uint8_t ref)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_1_REG, ADS122C04_Reg.reg1.all));
 }
 
-// Enable / disable the internal temperature sensor
+/**
+   Enable / disable the internal temperature sensor
+   \param enable The temperature sensor configuration value, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::enableInternalTempSensor(uint8_t enable)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all)) == false)
@@ -679,7 +775,11 @@ bool SFE_ADS122C04::enableInternalTempSensor(uint8_t enable)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_1_REG, ADS122C04_Reg.reg1.all));
 }
 
-// Enable / disable the conversion data counter
+/**
+   Enable / disable the conversion data counter
+   \param enable The data counter configuration, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setDataCounter(uint8_t enable)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all)) == false)
@@ -688,7 +788,11 @@ bool SFE_ADS122C04::setDataCounter(uint8_t enable)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_2_REG, ADS122C04_Reg.reg2.all));
 }
 
-// Configure the data integrity check
+/**
+   Configure the data integrity check
+   \param setting The integrity check configuration, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setDataIntegrityCheck(uint8_t setting)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all)) == false)
@@ -697,7 +801,11 @@ bool SFE_ADS122C04::setDataIntegrityCheck(uint8_t setting)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_2_REG, ADS122C04_Reg.reg2.all));
 }
 
-// Enable / disable the 10uA burn-out current source
+/**
+   Enable / disable the 10uA burn-out current source
+   \param enable The burn-out configuration, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setBurnOutCurrent(uint8_t enable)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all)) == false)
@@ -706,7 +814,11 @@ bool SFE_ADS122C04::setBurnOutCurrent(uint8_t enable)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_2_REG, ADS122C04_Reg.reg2.all));
 }
 
-// Configure the internal programmable current sources
+/**
+   Configure the internal programmable current sources
+   \param current The internal current configuration, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setIDACcurrent(uint8_t current)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all)) == false)
@@ -723,7 +835,11 @@ bool SFE_ADS122C04::setIDACcurrent(uint8_t current)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_2_REG, ADS122C04_Reg.reg2.all));
 }
 
-// Configure the IDAC1 routing
+/**
+   Configure the IDAC1 routing
+   \param setting The IDAC1 routing configuration, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setIDAC1mux(uint8_t setting)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_3_REG, &ADS122C04_Reg.reg3.all)) == false)
@@ -732,7 +848,11 @@ bool SFE_ADS122C04::setIDAC1mux(uint8_t setting)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_3_REG, ADS122C04_Reg.reg3.all));
 }
 
-// Configure the IDAC2 routing
+/**
+   Configure the IDAC2 routing
+   \param setting The IDAC2 routing configuration, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::setIDAC2mux(uint8_t setting)
 {
   if ((ADS122C04_readReg(ADS122C04_CONFIG_3_REG, &ADS122C04_Reg.reg3.all)) == false)
@@ -741,64 +861,91 @@ bool SFE_ADS122C04::setIDAC2mux(uint8_t setting)
   return(ADS122C04_writeReg(ADS122C04_CONFIG_3_REG, ADS122C04_Reg.reg3.all));
 }
 
-// Read Config Reg 2 and check the DRDY bit
-// Data is ready when DRDY is high
+/**
+   Check the DRDY bit (next conversion ready). Data is ready when DRDY is high.
+   \return true if DRDY high, false otherwise.
+*/
 bool SFE_ADS122C04::checkDataReady(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all);
   return(ADS122C04_Reg.reg2.bit.DRDY > 0);
 }
 
-// Get the input multiplexer configuration
+/**
+   Get the input multiplexer configuration, return value can be compared to
+   definitions given in ADS122C04_ADC_PI.hpp
+   \return The input mux configuration.
+*/
 uint8_t SFE_ADS122C04::getInputMultiplexer(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_0_REG, &ADS122C04_Reg.reg0.all);
   return(ADS122C04_Reg.reg0.bit.MUX);
 }
 
-// Get the gain setting
+/**
+   Get the gain setting, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return The gain configuration.
+*/
 uint8_t SFE_ADS122C04::getGain(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_0_REG, &ADS122C04_Reg.reg0.all);
   return(ADS122C04_Reg.reg0.bit.GAIN);
 }
 
-// Get the Programmable Gain Amplifier status
+/**
+   Get the Programmable Gain Amplifier status, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return The PGA status configuration.
+*/
 uint8_t SFE_ADS122C04::getPGAstatus(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_0_REG, &ADS122C04_Reg.reg0.all);
   return(ADS122C04_Reg.reg0.bit.PGA_BYPASS);
 }
 
-// Get the data rate (sample speed)
+/**
+   Get the data rate (sample speed), comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return The currently configured data rate.
+*/
 uint8_t SFE_ADS122C04::getDataRate(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all);
   return(ADS122C04_Reg.reg1.bit.DR);
 }
 
-// Get the operating mode (normal / turbo)
+/**
+   Get the operating mode (normal / turbo), comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return The current operating mode
+*/
 uint8_t SFE_ADS122C04::getOperatingMode(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all);
   return(ADS122C04_Reg.reg1.bit.MODE);
 }
 
-// Get the conversion mode (single-shot / continuous)
+/**
+   Get the conversion mode (single-shot / continuous), comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return The current conversion mode
+*/
 uint8_t SFE_ADS122C04::getConversionMode(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all);
   return(ADS122C04_Reg.reg1.bit.CMBIT);
 }
 
-// Get the voltage reference configuration
+/**
+   Get the voltage reference configuration, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return The voltage reference configuration
+*/
 uint8_t SFE_ADS122C04::getVoltageReference(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all);
   return(ADS122C04_Reg.reg1.bit.VREF);
 }
 
-// Get the internal temperature sensor status
+/**
+   Get the internal temperature sensor status, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return internal temperature sensor status code
+*/
 uint8_t SFE_ADS122C04::getInternalTempSensorStatus(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_1_REG, &ADS122C04_Reg.reg1.all);
@@ -814,28 +961,40 @@ uint8_t SFE_ADS122C04::getInternalTempSensorStatus(void)
   return(ADS122C04_Reg.reg1.bit.TS);
 }
 
-// Get the data counter status
+/**
+   Get the data counter status code, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return data counter status
+*/
 uint8_t SFE_ADS122C04::getDataCounter(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all);
   return(ADS122C04_Reg.reg2.bit.DCNT);
 }
 
-// Get the data integrity check configuration
+/**
+   Get the data integrity check configuration code, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return data integrity check configuration
+*/
 uint8_t SFE_ADS122C04::getDataIntegrityCheck(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all);
   return(ADS122C04_Reg.reg2.bit.CRC);
 }
 
-// Get the burn-out current status
+/**
+   Get the burn-out current status code, comparable to definitions given in ADS122C04_ADC_PI.hpp
+   \return the burn-out current status
+*/
 uint8_t SFE_ADS122C04::getBurnOutCurrent(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all);
   return(ADS122C04_Reg.reg2.bit.BCS);
 }
 
-// Get the IDAC setting
+/**
+   Get the IDAC setting
+   \return the current IDAC setting.
+*/
 uint8_t SFE_ADS122C04::getIDACcurrent(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_2_REG, &ADS122C04_Reg.reg2.all);
@@ -850,21 +1009,34 @@ uint8_t SFE_ADS122C04::getIDACcurrent(void)
   return(ADS122C04_Reg.reg2.bit.IDAC);
 }
 
-// Get the IDAC1 mux configuration
+
+/**
+   Get the IDAC1 mux configuration code
+   \return IDAC1 mux configuration code
+*/
 uint8_t SFE_ADS122C04::getIDAC1mux(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_3_REG, &ADS122C04_Reg.reg3.all);
   return(ADS122C04_Reg.reg3.bit.I1MUX);
 }
 
-// Get the IDAC2 mux configuration
+/**
+   Get the IDAC2 mux configuration code
+   \return IDAC2 mux configuration code
+*/
 uint8_t SFE_ADS122C04::getIDAC2mux(void)
 {
   ADS122C04_readReg(ADS122C04_CONFIG_3_REG, &ADS122C04_Reg.reg3.all);
   return(ADS122C04_Reg.reg3.bit.I2MUX);
 }
 
-// Update ADS122C04_Reg and initialise the ADS122C04 using the supplied parameters
+/**
+   Update the configuration registers and then initialise the ADC using the 
+   supplied parameters.
+
+   \param param Pointer to configuration struct, see ADS122C04_ADC_PI.hpp
+   \return true on success, false otherwise
+*/
 bool SFE_ADS122C04::ADS122C04_init(ADS122C04_initParam *param)
 {
   ADS122C04_Reg.reg0.all = 0; // Reset all four register values to the default value of 0x00
@@ -903,7 +1075,10 @@ bool SFE_ADS122C04::ADS122C04_init(ADS122C04_initParam *param)
   return(ret_val);
 }
 
-// Debug print of the ADS122C04 configuration
+
+/**
+   Debug print of the ADS122C04 configuration
+*/
 void SFE_ADS122C04::printADS122C04config(void)
 {
   if (_printDebug == true)
@@ -970,21 +1145,40 @@ void SFE_ADS122C04::printADS122C04config(void)
   }
 }
 
+/**
+   Reset the ADC
+   \return true on success
+*/
 bool SFE_ADS122C04::reset(void)
 {
   return(ADS122C04_sendCommand(ADS122C04_RESET_CMD));
 }
 
+/**
+   Start the ADC
+   \return true on success
+ */
 bool SFE_ADS122C04::start(void)
 {
   return(ADS122C04_sendCommand(ADS122C04_START_CMD));
 }
 
+/**
+   Shut down the ADC
+   \return true on success
+ */
 bool SFE_ADS122C04::powerdown(void)
 {
   return(ADS122C04_sendCommand(ADS122C04_POWERDOWN_CMD));
 }
 
+/**
+   Write a value to a specific register on the ADC
+
+   \param reg The target register, see ADS122C04_ADC_PI.hpp.
+   \param writeValue The configuration value
+   \return true on success
+ */
 bool SFE_ADS122C04::ADS122C04_writeReg(uint8_t reg, uint8_t writeValue)
 {
   uint8_t command = 0;
@@ -992,6 +1186,12 @@ bool SFE_ADS122C04::ADS122C04_writeReg(uint8_t reg, uint8_t writeValue)
   return(ADS122C04_sendCommandWithValue(command, writeValue));
 }
 
+/**
+   Read from a specific register.
+   \param reg The target register
+   \param readValue Pointer into which the value will be written
+   \return true on success
+*/
 bool SFE_ADS122C04::ADS122C04_readReg(uint8_t reg, uint8_t *readValue)
 {
   uint8_t command = 0;
@@ -1006,23 +1206,44 @@ bool SFE_ADS122C04::ADS122C04_readReg(uint8_t reg, uint8_t *readValue)
   return true;
 }
 
+/**
+   Send a command to the ADC.
+   \param command The desired command, see ADS122C04_ADC_PI.hpp
+   \return true on success
+*/
 bool SFE_ADS122C04::ADS122C04_sendCommand(uint8_t command)
 {
   // Return true on success, else false. No way to recover error code.
   return i2c_smbus_write_byte(_i2c_fd, command) == 0;
 }
 
+/**
+   Send a command with an associated value to the ADC.
+   \param command The desired command, see ADS122C04_ADC_PI.hpp
+   \param value The associated value.
+*/
 bool SFE_ADS122C04::ADS122C04_sendCommandWithValue(uint8_t command, uint8_t value)
 {
   // Return true on success, else false. No way to recover error code.
   return i2c_smbus_write_byte_data(_i2c_fd, command, value) == 0;
 }
 
-// Read the conversion result with count byte.
-// The conversion result is 24-bit two's complement (signed)
-// and is returned in the 24 lowest bits of the uint32_t conversionData.
-// Hence it will always appear positive.
-// Higher functions will need to take care of converting it to (e.g.) float or int32_t.
+/**
+   Read the conversion result with count byte. The conversion result is 24-bit
+   two's complement (signed) and is returned in the lowest 3 bytes of the
+   conversionData parameter. Hence, it will always appear positive and the caller
+   is responsible for correctly interpreting this value.
+
+   \warning The working status of this function is unknown for the
+   ADS112C04.  If I recall correctly, this will run but given that the
+   code pulls three bytes from the I2C read (RXByte), it is likely that
+   the returned values are corrupted (attempting to read 24-bits from a
+   16-bit value). This function was not used for any practical work.
+
+   \param conversionData Pointer into which the data will be written
+   \param count Pointer into which the data count value will be written
+   \return true on success
+*/
 bool SFE_ADS122C04::ADS122C04_getConversionDataWithCount(
                                                          uint32_t *conversionData,
                                                          uint8_t *count
@@ -1052,12 +1273,17 @@ bool SFE_ADS122C04::ADS122C04_getConversionDataWithCount(
   return(true);
 }
 
-// Read the conversion result.
-// MODIFIED FOR THE ADS112C04 INSTEAD OF ADS122C04
-// The 112 provides 16 bits, not 24. Again, two's complement and still
-// needs sign extended.
-// Hence it will always appear positive.
-// Higher functions will need to take care of converting it to (e.g.) float or int32_t.
+/**
+   Read the conversion result. The conversion result is 16-bit
+   two's complement (signed) and is returned in the lowest 2 bytes of the
+   conversionData parameter. Hence, it will always appear positive and the caller
+   is responsible for correctly interpreting this value.
+
+   \note This function is known to work correctly on the ADS112C04.
+
+   \param conversionData Pointer into which the data will be written
+   \return true on success
+*/
 bool SFE_ADS122C04::ADS122C04_getConversionData(uint32_t *conversionData)
 {
   uint8_t RXByte_s = 2;
@@ -1082,12 +1308,18 @@ bool SFE_ADS122C04::ADS122C04_getConversionData(uint32_t *conversionData)
   return true;
 }
 
-// Expose init parmeters
+/**
+   Expose init parameters.
+   \return The parameters used on the last initialisation
+*/
 ADS122C04_initParam* SFE_ADS122C04::getCurrentInitParams(){
   return &lastInitParams;
 }
 
-// Update chip configuration
+/**
+   Update chip configuration. To be called after configuration has been changed.
+   \return true on success
+*/
 bool SFE_ADS122C04::reinitialise(){
   return ADS122C04_init(&lastInitParams);
 }

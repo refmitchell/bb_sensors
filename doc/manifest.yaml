@@ -3,10 +3,10 @@ authors: ''
 brief: ''
 bugtracker: ''
 depends:
-- cv_bridge
-- catkin
-- image_transport
 - roscpp
+- image_transport
+- catkin
+- cv_bridge
 description: The bb_sensors package
 license: TODO
 maintainers: pi <pi@todo.todo>
