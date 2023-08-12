@@ -62,7 +62,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="POL__OP_8hpp_source.html#l00012">12</a> of file <a class="el" href="POL__OP_8hpp_source.html">POL_OP.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8hpp_source.html#l00019">19</a> of file <a class="el" href="POL__OP_8hpp_source.html">POL_OP.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3e3071f5f1a26b9fa81e4d759d86bde6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3e3071f5f1a26b9fa81e4d759d86bde6">&#9670;&nbsp;</a></span>POL_OP()</h2>
@@ -107,8 +107,19 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Constructor. Initialises both ADCs on the board.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">i2c_bus</td><td>The string ID of the I2C bus. </td></tr>
+    <tr><td class="paramname">A2D1_addr</td><td>The I2C address of the first ADC. </td></tr>
+    <tr><td class="paramname">A2D1_addr</td><td>The I2C address of the second ADC. </td></tr>
+    <tr><td class="paramname">debug</td><td>Debug flag, passed to the ADC library. </td></tr>
+    <tr><td class="paramname">channel</td><td>The I2C multiplexer which this unit is connected to. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00019">19</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00044">44</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -127,8 +138,11 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the I2C mux channel information for this polarisation opponent unit.</p>
+<dl class="section note"><dt>Note</dt><dd>This is referring to the sensor-level mux (i.e. the Adafruit one), <b>not</b> the ADC muxes.p</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The I2C mux channel to which this pol op unit is connected. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00221">221</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00323">323</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -163,8 +177,19 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>This function performs one complete read cycle of a specific ADC on the PCB.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>The integer index of the ADC to be read (0 or 1). </td></tr>
+    <tr><td class="paramname">readings</td><td>A pointer to an array large enough to store the output (of size &gt; 2). The readings will be placed in this array. </td></tr>
+    <tr><td class="paramname">delay</td><td>A time delay (in ms) used to ensure data integrity.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True on success, false otherwise.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The current working status of this function is unknown. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00093">93</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00157">157</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -201,8 +226,18 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Read from the ADC if it is configured to continuous mode.</p>
+<dl class="section note"><dt>Note</dt><dd>You must make sure the ADC is in continuous mode before assuming this code will work. If initialised in POL_OP_MODE, this will be the case. Similarly, you must make sure the ADC channel is set prior to attempting a read to ensure sensible data.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A2D</td><td>The ADC object from which we wish to read. </td></tr>
+    <tr><td class="paramname">delay</td><td>A time delay (in ms) to ensure data integrity. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The raw ADC reading. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00085">85</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00136">136</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -239,8 +274,21 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Read raw data from a single ADC channel.</p>
+<dl class="section note"><dt>Note</dt><dd>In addition to the Adafruit I2C mux, each ADC also has its own multiplexer, on which two channels are in use (one for each photodiode). This function assumes the caller has already configured the ADC to read from the desired channel.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This function was used to read from the polarisation opponent units during early prototyping and its current working status is unknown.</dd>
+<dd>
+The ADC readout uses a 16-bit encoding which requires sign extension which is not provided by this function!</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">A2D</td><td>The ADC object we want to read from. </td></tr>
+    <tr><td class="paramname">delay</td><td>A time delay (in ms) used to ensure data integrity. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The raw 16 bit ADC data. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00057">57</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00097">97</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -269,8 +317,19 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Performs a full (very slow) read from the PCB.</p>
+<dl class="section note"><dt>Note</dt><dd>The ADC encodes its output as a 16-bit signed integer which requres sign extension to be represented as a standard int. This function performs the required sign-extension.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The working status of this function is unknown. If it does work, it is guaranteed to be slow as it does not take advantage of the channel switching delays on the ADC.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">readings</td><td>A pointer to an array (size &gt;= 4) which can hold all of the photodiode readings. The values will be placed in this array. </td></tr>
+    <tr><td class="paramname">delay</td><td>A time delay (in ms) to ensure data integrity. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00127">127</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00194">194</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -299,8 +358,20 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Perform a full interleaved read from the PCB.</p>
+<p>This PCB read function takes advantage of the delays incurred in channel switching on the ADCs by performing one read, changing channel, then reading from the other ADC while we wait for the first one to finish changing channel.</p>
+<dl class="section note"><dt>Note</dt><dd>In the source there is a lot of code dedicated to time tracking. This is functionally irrelevant and was only used to characterise the sensor read latency. All print-outs should currently be disabled and can be re-enabled by uncommenting the print stream below. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>The default delay is 100ms but this can be set as low as 25ms. Any delay less than 25ms will start to cause read errors for the last polarisation opponent unit in the chain. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">readings</td><td>Pointer to an array large enough to house all four photodiode readings as integers. The photodiode readings will be stored here. </td></tr>
+    <tr><td class="paramname">delay</td><td>Time delay (in ms) used to ensure data integrity. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false otherwise </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00153">153</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00248">248</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -319,8 +390,24 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set data rate using presets defined in ADS122_ADC_PI.hpp; definitions included below for convenience:</p>
+<pre class="fragment">#define ADS122C04_DATA_RATE_20SPS   0x0
+#define ADS122C04_DATA_RATE_45SPS   0x1
+#define ADS122C04_DATA_RATE_90SPS   0x2
+#define ADS122C04_DATA_RATE_175SPS  0x3
+#define ADS122C04_DATA_RATE_330SPS  0x4
+#define ADS122C04_DATA_RATE_600SPS  0x5
+#define ADS122C04_DATA_RATE_1000SPS 0x6
+</pre><p>See the datasheet for the <b>ADS112C04</b> for more information.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>desired data rate. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false on failure. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00257">257</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00372">372</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -339,8 +426,17 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set the PGA gain for both ADCs on the PCB.</p>
+<dl class="section note"><dt>Note</dt><dd>The gain must be a valid 3-bit gain setting for the ADS122C04. Use relevant definitions in <a class="el" href="ADS122C04__ADC__PI_8hpp.html">ADS122C04_ADC_PI.hpp</a> (ADS122C04_GAIN_X) to ensure valid settings are used. No error checking is included!</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">The</td><td>desired 3-bit gain setting.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true on success, false on failure </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00229">229</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8cpp_source.html#l00337">337</a> of file <a class="el" href="POL__OP_8cpp_source.html">POL_OP.cpp</a>.</p>
 
 </div>
 </div>
@@ -365,7 +461,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8hpp_source.html#l00016">16</a> of file <a class="el" href="POL__OP_8hpp_source.html">POL_OP.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8hpp_source.html#l00023">23</a> of file <a class="el" href="POL__OP_8hpp_source.html">POL_OP.hpp</a>.</p>
 
 </div>
 </div>
@@ -389,7 +485,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="POL__OP_8hpp_source.html#l00015">15</a> of file <a class="el" href="POL__OP_8hpp_source.html">POL_OP.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="POL__OP_8hpp_source.html#l00022">22</a> of file <a class="el" href="POL__OP_8hpp_source.html">POL_OP.hpp</a>.</p>
 
 </div>
 </div>
@@ -403,7 +499,7 @@ Private Attributes</h2></td></tr>
 <hr size="1"><div style="align: right;">
 <a href="http://wiki.ros.org/bb_sensors">bb_sensors</a><br />
 Author(s): </br />
-<small>autogenerated on Thu Aug 10 2023 16:56:57</small>
+<small>autogenerated on Sat Aug 12 2023 12:36:03</small>
 </div>
 </body>
 </html>

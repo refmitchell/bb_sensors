@@ -26,61 +26,58 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <a href="pol__op__read_8cpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160; </div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &lt;sstream&gt;</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="POL__OP_8hpp.html">bb_sensors/POL_OP.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &quot;ros/ros.h&quot;</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &quot;std_msgs/Float64.h&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;sstream&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#af855c94dc540e943632089ce7496faac">   24</a></span>&#160;<span class="preprocessor">#define LOG(x) std::cout &lt;&lt; x &lt;&lt; std::endl</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="POL__OP_8hpp.html">bb_sensors/POL_OP.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#a21e8afd498c81fc2d2c43088e9a45fd6">   26</a></span>&#160;<span class="preprocessor">#define A2D_ADDR_1 0x40</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#a43f82499175b44a2de8529bd5e87ea9a">   27</a></span>&#160;<span class="preprocessor">#define A2D_ADDR_2 0x41</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="preprocessor">#include &quot;ros/ros.h&quot;</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &quot;std_msgs/Float64.h&quot;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">   29</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="pol__op__read_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv){</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="comment">/* Initialise the ROS node */</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  ros::init(argc, argv, <span class="stringliteral">&quot;pol_op_test&quot;</span>);</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;  ros::NodeHandle n;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="comment">/* Initialise polarisation opponent device */</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  std::string bus = <span class="stringliteral">&quot;/dev/i2c-1&quot;</span>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <a class="code" href="classPOL__OP.html">POL_OP</a> po(bus, <a class="code" href="pol__op__read_8cpp.html#a21e8afd498c81fc2d2c43088e9a45fd6">A2D_ADDR_1</a>, <a class="code" href="pol__op__read_8cpp.html#a43f82499175b44a2de8529bd5e87ea9a">A2D_ADDR_2</a>, <span class="keyword">false</span>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="comment">/* Read from the photodiodes and print the output at the terminal. */</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  ros::Rate loop_rate(10);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  <span class="keywordflow">while</span>(ros::ok()) {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keywordtype">int</span> readings[4];</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordtype">bool</span> succcess = po.<a class="code" href="classPOL__OP.html#a568074b97a44e4d59855b0a31e71d5e3">read_sensor</a>(readings);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::stringstream outstr;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    outstr &lt;&lt;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="stringliteral">&quot;Readings: \n&quot;</span>;</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 4; i++){</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      outstr &lt;&lt; <span class="stringliteral">&quot;R&quot;</span> &lt;&lt; i+1 &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; (int) readings[i] &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    ROS_INFO(outstr.str().c_str());</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    ros::spinOnce();</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    loop_rate.sleep();</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#af855c94dc540e943632089ce7496faac">   29</a></span>&#160;<span class="preprocessor">#define LOG(x) std::cout &lt;&lt; x &lt;&lt; std::endl</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#a21e8afd498c81fc2d2c43088e9a45fd6">   31</a></span>&#160;<span class="preprocessor">#define A2D_ADDR_1 0x40 </span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#a43f82499175b44a2de8529bd5e87ea9a">   32</a></span>&#160;<span class="preprocessor">#define A2D_ADDR_2 0x41 </span></div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="pol__op__read_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">   34</a></span>&#160;<span class="preprocessor">int main(int argc, char **argv){</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="comment">/* Initialise the ROS node */</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  ros::init(argc, argv, <span class="stringliteral">&quot;pol_op_test&quot;</span>);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  ros::NodeHandle n;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  <span class="comment">/* Initialise polarisation opponent device */</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  std::string bus = <span class="stringliteral">&quot;/dev/i2c-1&quot;</span>;</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;  <a class="code" href="classPOL__OP.html">POL_OP</a> po(bus, <a class="code" href="pol__op__read_8cpp.html#a21e8afd498c81fc2d2c43088e9a45fd6">A2D_ADDR_1</a>, <a class="code" href="pol__op__read_8cpp.html#a43f82499175b44a2de8529bd5e87ea9a">A2D_ADDR_2</a>, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  <span class="comment">/* Read from the photodiodes and print the output at the terminal. */</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  ros::Rate loop_rate(10);</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;  <span class="keywordflow">while</span>(ros::ok()) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">int</span> readings[4];</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keywordtype">bool</span> succcess = po.read_sensor(readings);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    std::stringstream outstr;</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    outstr &lt;&lt;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="stringliteral">&quot;Readings: \n&quot;</span>;</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 4; i++){</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      outstr &lt;&lt; <span class="stringliteral">&quot;R&quot;</span> &lt;&lt; i+1 &lt;&lt; <span class="stringliteral">&quot;: &quot;</span> &lt;&lt; (int) readings[i] &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    ROS_INFO(outstr.str().c_str());</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    ros::spinOnce();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    loop_rate.sleep();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  }</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassPOL__OP_html"><div class="ttname"><a href="classPOL__OP.html">POL_OP</a></div><div class="ttdef"><b>Definition:</b> <a href="POL__OP_8hpp_source.html#l00012">POL_OP.hpp:12</a></div></div>
-<div class="ttc" id="apol__op__read_8cpp_html_a43f82499175b44a2de8529bd5e87ea9a"><div class="ttname"><a href="pol__op__read_8cpp.html#a43f82499175b44a2de8529bd5e87ea9a">A2D_ADDR_2</a></div><div class="ttdeci">#define A2D_ADDR_2</div><div class="ttdef"><b>Definition:</b> <a href="pol__op__read_8cpp_source.html#l00027">pol_op_read.cpp:27</a></div></div>
-<div class="ttc" id="apol__op__read_8cpp_html_a3c04138a5bfe5d72780bb7e82a18e627"><div class="ttname"><a href="pol__op__read_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a></div><div class="ttdeci">int main(int argc, char **argv)</div><div class="ttdef"><b>Definition:</b> <a href="pol__op__read_8cpp_source.html#l00029">pol_op_read.cpp:29</a></div></div>
-<div class="ttc" id="aclassPOL__OP_html_a568074b97a44e4d59855b0a31e71d5e3"><div class="ttname"><a href="classPOL__OP.html#a568074b97a44e4d59855b0a31e71d5e3">POL_OP::read_sensor</a></div><div class="ttdeci">bool read_sensor(int *readings, uint8_t delay=100)</div><div class="ttdef"><b>Definition:</b> <a href="POL__OP_8cpp_source.html#l00127">POL_OP.cpp:127</a></div></div>
-<div class="ttc" id="apol__op__read_8cpp_html_a21e8afd498c81fc2d2c43088e9a45fd6"><div class="ttname"><a href="pol__op__read_8cpp.html#a21e8afd498c81fc2d2c43088e9a45fd6">A2D_ADDR_1</a></div><div class="ttdeci">#define A2D_ADDR_1</div><div class="ttdef"><b>Definition:</b> <a href="pol__op__read_8cpp_source.html#l00026">pol_op_read.cpp:26</a></div></div>
-<div class="ttc" id="aPOL__OP_8hpp_html"><div class="ttname"><a href="POL__OP_8hpp.html">POL_OP.hpp</a></div></div>
+<div class="ttc" id="aclassPOL__OP_html"><div class="ttname"><a href="classPOL__OP.html">POL_OP</a></div><div class="ttdef"><b>Definition:</b> <a href="POL__OP_8hpp_source.html#l00019">POL_OP.hpp:19</a></div></div>
+<div class="ttc" id="apol__op__read_8cpp_html_a43f82499175b44a2de8529bd5e87ea9a"><div class="ttname"><a href="pol__op__read_8cpp.html#a43f82499175b44a2de8529bd5e87ea9a">A2D_ADDR_2</a></div><div class="ttdeci">#define A2D_ADDR_2</div><div class="ttdef"><b>Definition:</b> <a href="pol__op__read_8cpp_source.html#l00032">pol_op_read.cpp:32</a></div></div>
+<div class="ttc" id="apol__op__read_8cpp_html_a21e8afd498c81fc2d2c43088e9a45fd6"><div class="ttname"><a href="pol__op__read_8cpp.html#a21e8afd498c81fc2d2c43088e9a45fd6">A2D_ADDR_1</a></div><div class="ttdeci">#define A2D_ADDR_1</div><div class="ttdef"><b>Definition:</b> <a href="pol__op__read_8cpp_source.html#l00031">pol_op_read.cpp:31</a></div></div>
+<div class="ttc" id="aPOL__OP_8hpp_html"><div class="ttname"><a href="POL__OP_8hpp.html">POL_OP.hpp</a></div><div class="ttdoc">Declaration of the POL_OP wrapper class for reading the polarisation oppponent PCBs.</div></div>
 
 <br clear="all" />
 <hr size="1"><div style="align: right;">
 <a href="http://wiki.ros.org/bb_sensors">bb_sensors</a><br />
 Author(s): </br />
-<small>autogenerated on Thu Aug 10 2023 16:56:57</small>
+<small>autogenerated on Sat Aug 12 2023 12:36:03</small>
 </div>
 </body>
 </html>

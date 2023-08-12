@@ -1,18 +1,28 @@
 /**
- * argparse.h is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License v3 as published by
- * the Free Software Foundation.
- *
- * argparse.h is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with argparse.h.  If not, see <https://www.gnu.org/licenses/>.
- *
- * Author: Jesse Laning
- */
+   \file argparse.h
+   \brief Third-party header only argument parser
+
+   This file is not my own work and was copied from:
+   https://github.com/jamolnng/argparse
+
+   The software was made available via GNU GPL v3, the license is included
+   below. See the linked github repo for documentation.
+
+   \b License
+   argparse.h is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License v3 as published by
+   the Free Software Foundation.
+
+   argparse.h is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with argparse.h.  If not, see <https://www.gnu.org/licenses/>.
+
+   Author: Jesse Laning
+*/
 
 #ifndef ARGPARSE_H
 #define ARGPARSE_H

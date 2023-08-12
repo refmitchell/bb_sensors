@@ -1,8 +1,8 @@
 <map id="ADS122C04_ADC_PI.hpp" name="ADS122C04_ADC_PI.hpp">
 <area shape="rect" id="node1" title=" " alt="" coords="225,5,401,32"/>
-<area shape="rect" id="node2" href="$POL__OP_8hpp.html" title=" " alt="" coords="164,80,261,107"/>
+<area shape="rect" id="node2" href="$POL__OP_8hpp.html" title="Declaration of the POL_OP wrapper class for reading the polarisation oppponent PCBs." alt="" coords="164,80,261,107"/>
 <area shape="rect" id="node4" href="$pol__op__mux_8cpp.html" title="ROS node to read from the full eight&#45;unit polarisation sensor." alt="" coords="269,155,386,181"/>
 <area shape="rect" id="node6" href="$ADS122C04__ADC__PI_8cpp.html" title=" " alt="" coords="350,80,526,107"/>
-<area shape="rect" id="node3" href="$POL__OP_8cpp.html" title=" " alt="" coords="5,155,103,181"/>
+<area shape="rect" id="node3" href="$POL__OP_8cpp.html" title="Implementation of the POL_OP wrapper class for reading the polarisation opponent PCBs." alt="" coords="5,155,103,181"/>
 <area shape="rect" id="node5" href="$pol__op__read_8cpp.html" title="ROS node to read from a single polarsiation opponent unit." alt="" coords="127,155,245,181"/>
 </map>
