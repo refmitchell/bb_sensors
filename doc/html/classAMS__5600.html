@@ -150,7 +150,7 @@ Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00027">27</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00020">20</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ad5dd85052d5e4fd9172a01b0f0839a5e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad5dd85052d5e4fd9172a01b0f0839a5e">&#9670;&nbsp;</a></span>AMS_5600() <span class="overload">[1/2]</span></h2>
@@ -167,8 +167,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Default constructor </p>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00042">42</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00035">35</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -187,8 +188,15 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Custom constructor which also allows the multiplexer channel to be stored alongside the rest of the object properties.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>The mux channel to which this device is connected. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00069">69</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00068">68</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -207,8 +215,15 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Permenantly burn the start and end positions onto the chip. The return codes are: </p><pre class="fragment"> 1 == success
+-1 == no magnet
+-2 == burn limit exceeded
+-3 == start and end positions not set (useless burn)
+</pre> <dl class="section return"><dt>Returns</dt><dd>Success code</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If the return code is negative, then no burn will be attempted (see source code).</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This method will <b>permenantly</b> burn the scaling settings onto the chip. This can be done a maximum of three times. Make sure you have a good reason before altering the chip. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00391">391</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00386">386</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -227,7 +242,7 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00425">425</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00428">428</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -245,8 +260,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Check for a magnet in range of the encoder. </p><dl class="section return"><dt>Returns</dt><dd>1 if magnet is present, 0 if not. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00301">301</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00293">293</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -264,8 +280,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the I2C address of the device. </p><dl class="section return"><dt>Returns</dt><dd>The I2C address. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00135">135</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00143">143</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -283,8 +300,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the value in the AGC register. </p><dl class="section return"><dt>Returns</dt><dd>The value in the AGC register. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00353">353</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00344">344</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -302,8 +320,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Determine how many times the chip has been permenantly written to (the burn count). </p><dl class="section return"><dt>Returns</dt><dd>The burn count. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00376">376</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00363">363</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -321,8 +340,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the mux channel associated with this device. </p><dl class="section return"><dt>Returns</dt><dd>The channel to which the device is connected. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00100">100</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00101">101</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -340,8 +360,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the current encoder end position. </p><dl class="section return"><dt>Returns</dt><dd>The current end position. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00245">245</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00243">243</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -359,8 +380,13 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the magnet strength. </p><pre class="fragment">0 == no magnet
+1 == too weak
+2 == just right
+3 == too strong
+</pre> <dl class="section return"><dt>Returns</dt><dd>The strength code (0, 1, 2, or 3). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00326">326</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00319">319</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -378,8 +404,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the value in the magnitude register. </p><dl class="section return"><dt>Returns</dt><dd>The value in the magnitude register n </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00364">364</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00353">353</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -397,8 +424,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the value in the max angle register. </p><dl class="section return"><dt>Returns</dt><dd>The current max angle. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00173">173</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00177">177</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -416,8 +444,10 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the raw angle of the magnet. </p><dl class="section return"><dt>Returns</dt><dd>The angle of the magnet w.r.t. the sensor. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This method ignores start, end, and max angle settings. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00258">258</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00255">255</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -435,8 +465,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Gets the scaled angle (angle w.r.t. start, end, and max value settings). </p><dl class="section return"><dt>Returns</dt><dd>The scaled angle. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00289">289</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00284">284</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -454,8 +485,10 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Measure the rotation speed. Takes the absolute angular difference between two measurements taken 10ms apart. </p><dl class="section return"><dt>Returns</dt><dd>The rotation speed of the magnet. </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This method is meant to return speed in degrees per second but this has not been checked or calibrated. You <b>must</b> check the speed measurement if comparison to other devices/data is required. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00270">270</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00269">269</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -473,8 +506,9 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get the current encoder start position. </p><dl class="section return"><dt>Returns</dt><dd>The current start position. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00210">210</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00211">211</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -501,8 +535,16 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Extract the 'high' byte of a standard int. </p><dl class="section note"><dt>Note</dt><dd>This method returns bits 8-15 of a standard four byte integer. It does <b>not</b> return the eight most significant bits. </dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">w</td><td>The full integer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bits 8-15 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00506">506</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00526">526</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -521,8 +563,15 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Initialise the I2C interface. See <a href="https://www.kernel.org/doc/Documentation/i2c/dev-interface">https://www.kernel.org/doc/Documentation/i2c/dev-interface</a></p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bus</td><td>The string identifier of the desired bus. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00103">103</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00108">108</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -549,8 +598,15 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Extract the low byte of a standard int. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">w</td><td>The full integer. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bits 0-7 </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00502">502</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00515">515</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -577,8 +633,16 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Read one byte from a specified register. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in_adr</td><td>The register address from which to read </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The data read from the I2C bus. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>You <b>must</b> call init before attempting to interact with the I2C bus (read or write). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00451">451</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00455">455</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -615,8 +679,17 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Read two bytes from the given register range. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">in_adr_hi</td><td>The high end of the address range. </td></tr>
+    <tr><td class="paramname">in_adr_lo</td><td>The low end of the address range. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The data read from the I2C bus. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>You <b>must</b> call init before attempting to interact with the I2C bus (read or write). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00473">473</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00479">479</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -635,6 +708,14 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set the encoder end position. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">endAngle</td><td>The new end position. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The value of the end position register. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If -1 is passed as endAngle, then this method will return the raw angle of the magnet. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00223">223</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
@@ -655,8 +736,16 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set the value stored in the maximum angle register. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">newMaxAngle</td><td>the desired maximum angle </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>the value in the maximum angle register </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If -1 is passed as newMaxAngle, then this method will return the raw angle of the magnet. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00148">148</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00154">154</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -675,8 +764,15 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set output mode. 0=PWM, 1=analog (full range from 0% to 100% between GND and VDD).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">mode</td><td>The mode setting, 0 for PWM, 1 for analog. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00115">115</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00125">125</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -695,8 +791,16 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Set the encoder start position. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">startAngle</td><td>The new start position. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The value of the start position register. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>If -1 is passed as startAngle, then this method will return the raw angle of the magnet. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00186">186</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00189">189</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -714,8 +818,6 @@ Private Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00097">97</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -752,8 +854,17 @@ Private Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Write one byte to a specified register. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">adr_in</td><td>The target register. </td></tr>
+    <tr><td class="paramname">dat_in</td><td>The data to write. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>You <b>must</b> call init before attempting to interact with the I2C bus (read or write). </dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>The caller must ensure that dat_in is no more than one byte in size. If the data is larger than one byte then the behaviour is not known. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00496">496</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8cpp_source.html#l00505">505</a> of file <a class="el" href="AMS__5600__PI_8cpp_source.html">AMS_5600_PI.cpp</a>.</p>
 
 </div>
 </div>
@@ -778,7 +889,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00090">90</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00083">83</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -802,7 +913,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00068">68</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00061">61</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -826,7 +937,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00087">87</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00080">80</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -850,7 +961,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00088">88</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00081">81</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -874,7 +985,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00093">93</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00086">86</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -898,7 +1009,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00066">66</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00059">59</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -922,7 +1033,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00083">83</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00076">76</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -946,7 +1057,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00084">84</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00077">77</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -970,7 +1081,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00064">64</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00057">57</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -994,7 +1105,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00065">65</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00058">58</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1018,7 +1129,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00091">91</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00084">84</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1042,7 +1153,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00092">92</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00085">85</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1066,7 +1177,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00081">81</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00074">74</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1090,7 +1201,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00082">82</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00075">75</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1114,7 +1225,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00073">73</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00066">66</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1138,7 +1249,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00079">79</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00072">72</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1162,7 +1273,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00080">80</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00073">73</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1186,7 +1297,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00072">72</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00065">65</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1210,7 +1321,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00085">85</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00078">78</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1234,7 +1345,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00086">86</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00079">79</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1258,7 +1369,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00071">71</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00064">64</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1282,7 +1393,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00069">69</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00062">62</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1306,7 +1417,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00089">89</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00082">82</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1330,7 +1441,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00076">76</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00069">69</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1354,7 +1465,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00077">77</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00070">70</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1378,7 +1489,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00078">78</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00071">71</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1402,7 +1513,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00070">70</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="AMS__5600__PI_8hpp_source.html#l00063">63</a> of file <a class="el" href="AMS__5600__PI_8hpp_source.html">AMS_5600_PI.hpp</a>.</p>
 
 </div>
 </div>
@@ -1416,7 +1527,7 @@ Private Attributes</h2></td></tr>
 <hr size="1"><div style="align: right;">
 <a href="http://wiki.ros.org/bb_sensors">bb_sensors</a><br />
 Author(s): </br />
-<small>autogenerated on Sat Aug 12 2023 14:44:53</small>
+<small>autogenerated on Mon Aug 14 2023 18:13:37</small>
 </div>
 </body>
 </html>

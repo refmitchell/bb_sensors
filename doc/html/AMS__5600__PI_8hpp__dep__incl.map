@@ -1,4 +1,5 @@
 <map id="AMS_5600_PI.hpp" name="AMS_5600_PI.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,136,32"/>
-<area shape="rect" id="node2" href="$i2c__mux_8cpp.html" title="ROS node which reads from a custom wind sensor." alt="" coords="23,80,119,107"/>
+<area shape="rect" id="node1" title="Declaration of AMS_5600 class." alt="" coords="77,5,214,32"/>
+<area shape="rect" id="node2" href="$AMS__5600__PI_8cpp.html" title="Implementation of AMS_5600 class." alt="" coords="5,80,141,107"/>
+<area shape="rect" id="node3" href="$i2c__mux_8cpp.html" title="ROS node which reads from a custom wind sensor." alt="" coords="165,80,269,107"/>
 </map>

@@ -1,20 +1,16 @@
-/****************************************************
-AMS 5600 class for the Raspberry Pi
+/**
+   \file: AMS_5600_PI.cpp
+   \brief Implementation of AMS_5600 class.
 
-Author: Robert Mitchell (adapted from Tom Denton)
+   File provides the implementation of the AMS_5600 class for reading
+   from the AS5600 magnetic encoder on the Raspberry Pi.
 
-Date: 23rd November 2020
+   The original version (written for Arduino) can be
+   found at:
+   https://github.com/Seeed-Studio/Seeed_Arduino_AS5600
 
-File: AMS_5600_PI.cpp
-
-Version 1.00
-
-Description: This class is designed to interface
-with the AS5600 magnetic encoder via I2C on a Raspberry
-Pi. The original version (written for Arduino) can be
-found at:
-https://github.com/Seeed-Studio/Seeed_Arduino_AS5600
-/***************************************************/
+   Requires i2c-tools, libi2c-dev.
+*/
 
 // I2C includes
 extern "C" {
@@ -33,12 +29,9 @@ extern "C" {
 
 #include "bb_sensors/AMS_5600_PI.hpp"
 
-/****************************************************
-/* Method: AMS_5600
-/* In: none
-/* Out: none
-/* Description: constructor class for AMS 5600
-/***************************************************/
+/**
+   Default constructor
+*/
 AMS_5600::AMS_5600()
 {
   /* set i2c address */
@@ -66,6 +59,12 @@ AMS_5600::AMS_5600()
   _burn = 0xff;
 }
 
+/**
+   Custom constructor which also allows the multiplexer channel
+   to be stored alongside the rest of the object properties.
+
+   \param channel The mux channel to which this device is connected.
+ */
 AMS_5600::AMS_5600(uint8_t channel){
   _channel = channel; // Only additional step, useful for the mux
 
@@ -94,12 +93,18 @@ AMS_5600::AMS_5600(uint8_t channel){
   _burn = 0xff;
 }
 
-std::string AMS_5600::testInteraction(){ return "Test"; }
 
-// Useful for the mux
+/**
+   Get the mux channel associated with this device.
+   \return The channel to which the device is connected.
+*/
 const uint8_t AMS_5600::getChannel(){ return _channel; }
 
-// I2C initialisation: https://www.kernel.org/doc/Documentation/i2c/dev-interface
+/**
+   Initialise the I2C interface. See https://www.kernel.org/doc/Documentation/i2c/dev-interface
+
+   \param bus The string identifier of the desired bus.
+*/
 void AMS_5600::init(std::string bus){
   _i2c_fd = 0;
 
@@ -111,7 +116,12 @@ void AMS_5600::init(std::string bus){
   }
 }
 
-/* mode = 0, output PWM, mode = 1 output analog (full range from 0% to 100% between GND and VDD*/
+
+/**
+   Set output mode. 0=PWM, 1=analog (full range from 0% to 100% between GND and VDD).
+
+   \param mode The mode setting, 0 for PWM, 1 for analog.
+*/
 void AMS_5600::setOutPut(uint8_t mode){
     uint8_t config_status;
 
@@ -126,25 +136,21 @@ void AMS_5600::setOutPut(uint8_t mode){
     writeOneByte(_conf_lo, lowByte(config_status));
 }
 
-/****************************************************
-/* Method: AMS_5600
-/* In: none
-/* Out: i2c address of AMS 5600
-/* Description: returns i2c address of AMS 5600
-/***************************************************/
+/**
+   Get the I2C address of the device.
+   \return The I2C address.
+*/
 int AMS_5600::getAddress(){
   return _ams5600_Address;
 }
 
-/*******************************************************
-/* Method: setMaxAngle
-/* In: new maximum angle to set OR none
-/* Out: value of max angle register
-/* Description: sets a value in maximum angle register.
-/* If no value is provided, method will read position of
-/* magnet.  Setting this register zeros out max position
-/* register.
-/*******************************************************/
+/**
+   Set the value stored in the maximum angle register.
+   \param newMaxAngle the desired maximum angle
+   \return the value in the maximum angle register
+   \note If -1 is passed as newMaxAngle, then this method
+   will return the raw angle of the magnet.
+*/
 word AMS_5600::setMaxAngle(word newMaxAngle){
   word retVal;
   if(newMaxAngle == -1)
@@ -164,25 +170,22 @@ word AMS_5600::setMaxAngle(word newMaxAngle){
 }
 
 
-/*******************************************************
-/* Method: getMaxAngle
-/* In: none
-/* Out: value of max angle register
-/* Description: gets value of maximum angle register.
-/*******************************************************/
+/**
+   Get the value in the max angle register.
+   \return The current max angle.
+ */
 word AMS_5600::getMaxAngle()
 {
   return readTwoBytes(_mang_hi, _mang_lo);
 }
 
-/*******************************************************
-/* Method: setStartPosition
-/* In: new start angle position
-/* Out: value of start position register
-/* Description: sets a value in start position register.
-/* If no value is provided, method will read position of
-/* magnet.
-/*******************************************************/
+/**
+   Set the encoder start position.
+   \param startAngle The new start position.
+   \return The value of the start position register.
+   \note If -1 is passed as startAngle, then this method
+   will return the raw angle of the magnet.
+*/
 word AMS_5600::setStartPosition(word startAngle)
 {
   if(startAngle == -1)
@@ -201,25 +204,22 @@ word AMS_5600::setStartPosition(word startAngle)
   return(_zPosition);
 }
 
-/*******************************************************
-/* Method: getStartPosition
-/* In: none
-/* Out: value of start position register
-/* Description: gets value of start position register.
-/*******************************************************/
+/**
+   Get the current encoder start position.
+   \return The current start position.
+*/
 word AMS_5600::getStartPosition()
 {
   return readTwoBytes(_zpos_hi, _zpos_lo);
 }
 
-/*******************************************************
-/* Method: setEndtPosition
-/* In: new end angle position
-/* Out: value of end position register
-/* Description: sets a value in end position register.
-/* If no value is provided, method will read position of
-/* magnet.
-/*******************************************************/
+/**
+   Set the encoder end position.
+   \param endAngle The new end position.
+   \return The value of the end position register.
+   \note If -1 is passed as endAngle, then this method
+   will return the raw angle of the magnet.
+*/
 word AMS_5600::setEndPosition(word endAngle)
 {
   if(endAngle == -1)
@@ -236,36 +236,35 @@ word AMS_5600::setEndPosition(word endAngle)
   return(_mPosition);
 }
 
-/*******************************************************
-/* Method: getEndPosition
-/* In: none
-/* Out: value of end position register
-/* Description: gets value of end position register.
-/*******************************************************/
+/**
+   Get the current encoder end position.
+   \return The current end position.
+*/
 word AMS_5600::getEndPosition()
 {
   word retVal = readTwoBytes(_mpos_hi, _mpos_lo);
   return retVal;
 }
 
-/*******************************************************
-/* Method: getRawAngle
-/* In: none
-/* Out: value of raw angle register
-/* Description: gets raw value of magnet position.
-/* start, end, and max angle settings do not apply
-/*******************************************************/
+/**
+   Get the raw angle of the magnet.
+   \return The angle of the magnet w.r.t. the sensor.
+   \note This method ignores start, end, and max angle
+   settings.
+*/
 word AMS_5600::getRawAngle()
 {
   return readTwoBytes(_raw_ang_hi, _raw_ang_lo);
 }
 
-/* Method: getSpeed()
-   In: none
-   Out: A speed measurement taken over 0.5 seconds
-   Description: Conducts two angle measurements taken milliseconds apart
-                then uses the absolute difference between the two
-                measurements to give the speed in degrees/second.
+/**
+   Measure the rotation speed. Takes the absolute angular 
+   difference between two measurements taken 10ms apart.
+   \return The rotation speed of the magnet.
+   \warning This method is meant to return speed in degrees
+   per second but this has not been checked or calibrated. 
+   You \b must check the speed measurement if comparison to other
+   devices/data is required.
  */
 double AMS_5600::getSpeed()
 {
@@ -278,26 +277,19 @@ double AMS_5600::getSpeed()
 }
 
 
-/*******************************************************
-/* Method: getScaledAngle
-/* In: none
-/* Out: value of scaled angle register
-/* Description: gets scaled value of magnet position.
-/* start, end, or max angle settings are used to
-/* determine value
-/*******************************************************/
+/**
+   Gets the scaled angle (angle w.r.t. start, end, and max value settings).
+   \return The scaled angle.
+*/
 word AMS_5600::getScaledAngle()
 {
   return readTwoBytes(_ang_hi, _ang_lo);
 }
 
-/*******************************************************
-/* Method: detectMagnet
-/* In: none
-/* Out: 1 if magnet is detected, 0 if not
-/* Description: reads status register and examines the
-/* MH bit
-/*******************************************************/
+/**
+   Check for a magnet in range of the encoder.
+   \return 1 if magnet is present, 0 if not.
+*/
 int AMS_5600::detectMagnet()
 {
   int magStatus;
@@ -314,15 +306,16 @@ int AMS_5600::detectMagnet()
   return retVal;
 }
 
-/*******************************************************
-/* Method: getMagnetStrength
-/* In: none
-/* Out: 0 if no magnet is detected
-/*      1 if magnet is to weak
-/*      2 if magnet is just right
-/*      3 if magnet is to strong
-/* Description: reads status register andexamins the MH,ML,MD bits
-/*******************************************************/
+/**
+   Get the magnet strength. 
+   \verbatim
+   0 == no magnet
+   1 == too weak
+   2 == just right
+   3 == too strong
+   \endverbatim
+   \return The strength code (0, 1, 2, or 3).
+*/
 int AMS_5600::getMagnetStrength()
 {
   int magStatus;
@@ -344,50 +337,52 @@ int AMS_5600::getMagnetStrength()
   return retVal;
 }
 
-/*******************************************************
-/* Method: get Agc
-/* In: none
-/* Out: value of AGC register
-/* Description: gets value of AGC register.
-/*******************************************************/
+/**
+   Get the value in the AGC register.
+   \return The value in the AGC register.
+*/
 int AMS_5600::getAgc()
 {
   return readOneByte(_agc);
 }
 
-/*******************************************************
-/* Method: getMagnitude
-/* In: none
-/* Out: value of magnitude register
-/* Description: gets value of magnitude register.
-/*******************************************************/
+/**
+   Get the value in the magnitude register.
+   \return The value in the magnitude register
+n*/
 word AMS_5600::getMagnitude()
 {
   return readTwoBytes(_mag_hi, _mag_lo);
 }
 
-/*******************************************************
-/* Method: getBurnCount
-/* In: none
-/* Out: value of zmco register
-/* Description: determines how many times chip has been
-/* permanently written to.
-/*******************************************************/
+/**
+   Determine how many times the chip has been permenantly written
+   to (the burn count).
+   \return The burn count.
+*/
 int AMS_5600::getBurnCount()
 {
   return readOneByte(_zmco);
 }
 
-/*******************************************************
-/* Method: burnAngle
-/* In: none
-/* Out: 1 success
-/*     -1 no magnet
-/*     -2 burn limit exceeded
-/*     -3 start and end positions not set (useless burn)
-/* Description: burns start and end positions to chip.
-/* THIS CAN ONLY BE DONE 3 TIMES
-/*******************************************************/
+/**
+   Permenantly burn the start and end positions onto the chip.
+   The return codes are:
+   \verbatim
+    1 == success
+   -1 == no magnet
+   -2 == burn limit exceeded
+   -3 == start and end positions not set (useless burn)
+   \endverbatim
+   \return Success code
+
+   \note If the return code is negative, then no burn will be attempted
+   (see source code).
+
+   \warning This method will \b permenantly burn the scaling settings onto
+   the chip. This can be done a maximum of three times. Make sure you have
+   a good reason before altering the chip.
+*/
 int AMS_5600::burnAngle()
 {
   int retVal = 1;
@@ -413,15 +408,23 @@ int AMS_5600::burnAngle()
   return retVal;
 }
 
-/*******************************************************
-/* Method: burnMaxAngleAndConfig
-/* In: none
-/* Out: 1 success
-/*     -1 burn limit exceeded
-/*     -2 max angle is to small, must be at or above 18 degrees
-/* Description: burns max angle and config data to chip.
-/* THIS CAN ONLY BE DONE 1 TIME
-/*******************************************************/
+/*
+  Burn the max angle and configuration data to the chip.
+
+  Return codes:
+  \verbatim
+    1 == success
+   -1 == burn limit exceeded
+   -2 == max angle is too small must be at least 18 degrees.
+   \endverbatim
+  \return Success code.
+  \warning This can be done \b once. Make sure you have a good
+  reason for permenantly altering the chip.
+
+  \note Both this and burnAngle use the same burn counter but
+  can be set a different number of times. If you must burn something
+  to the chip then do the max angle and config first.
+*/
 int AMS_5600::burnMaxAngleAndConfig()
 {
   int retVal = 1;
@@ -442,12 +445,13 @@ int AMS_5600::burnMaxAngleAndConfig()
 }
 
 
-/*******************************************************
-/* Method: readOneByte
-/* In: register to read
-/* Out: data read from i2c
-/* Description: reads one byte register from i2c
-/*******************************************************/
+/**
+   Read one byte from a specified register.
+   \param in_adr The register address from which to read
+   \return The data read from the I2C bus.
+   \note You \b must call init before attempting to interact with the I2C
+   bus (read or write).
+*/
 int AMS_5600::readOneByte(int in_adr){
   int retVal = -1;
 
@@ -464,12 +468,14 @@ int AMS_5600::readOneByte(int in_adr){
   return retVal;
 }
 
-/*******************************************************
-/* Method: readOneByte
-/* In: two registers to read
-/* Out: data read from i2c as a word
-/* Description: reads two bytes register from i2c
-/*******************************************************/
+/**
+   Read two bytes from the given register range.
+   \param in_adr_hi The high end of the address range.
+   \param in_adr_lo The low end of the address range.
+   \return The data read from the I2C bus.
+   \note You \b must call init before attempting to interact with the I2C
+   bus (read or write).
+*/
 word AMS_5600::readTwoBytes(int in_adr_hi, int in_adr_lo)
 {
   word retVal = -1;
@@ -487,24 +493,37 @@ word AMS_5600::readTwoBytes(int in_adr_hi, int in_adr_lo)
   return retVal;
 }
 
-/*******************************************************
-/* Method: writeOneByte
-/* In: address and data to write
-/* Out: none
-/* Description: writes one byte to a i2c register
-/*******************************************************/
+/**
+   Write one byte to a specified register.
+   \param adr_in The target register.
+   \param dat_in The data to write.
+   \note You \b must call init before attempting to interact with the I2C
+   bus (read or write).
+   \warning The caller must ensure that dat_in is no more than one byte in 
+   size. If the data is larger than one byte then the behaviour is not known. 
+*/
 void AMS_5600::writeOneByte(int adr_in, int dat_in)
 {
   i2c_smbus_write_byte_data(_i2c_fd, adr_in, dat_in);
 }
 
-// Helper methods which are normally defined by Arduino.h
+/**
+   Extract the low byte of a standard int.
+   \param w The full integer.
+   \return bits 0-7
+*/
 inline uint8_t AMS_5600::lowByte(int w) {
   return ((uint8_t) w & 0xff);
 }
 
+/**
+   Extract the 'high' byte of a standard int.
+   \note This method returns bits 8-15 of a standard four byte integer.
+   It does \b not return the eight most significant bits.
+   \param w The full integer.
+   \return bits 8-15
+*/
 inline uint8_t AMS_5600::highByte(int w) {
   return ((uint8_t) w >> 8);
 }
 
-/**********  END OF AMS 5600 CALSS *****************/

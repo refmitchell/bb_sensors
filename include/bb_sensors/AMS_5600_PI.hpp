@@ -1,23 +1,16 @@
-/****************************************************
-AMS 5600 class for the Raspberry Pi
+/**
+   \file: AMS_5600_PI.hpp
+   \brief Declaration of AMS_5600 class.
 
-Author: Robert Mitchell (adapted from Tom Denton)
+   File provides the declaration of the AMS_5600 class for reading
+   from the AS5600 magnetic encoder on the Raspberry Pi.
 
-Date: 23rd November 2020
+   The original version (written for Arduino) can be
+   found at:
+   https://github.com/Seeed-Studio/Seeed_Arduino_AS5600
 
-File: AMS_5600_PI.hpp
-
-Version 1.00
-
-Description: This class is designed to interface
-with the AS5600 magnetic encoder via I2C on a Raspberry
-Pi. The original version (written for Arduino) can be
-found at:
-https://github.com/Seeed-Studio/Seeed_Arduino_AS5600
-
-Requires i2c-tools, libi2c-dev.
-
-/***************************************************/
+   Requires i2c-tools, libi2c-dev.
+*/
 
 #ifndef AMS_5600_PI_h
 #define AMS_5600_PI_h

@@ -60,6 +60,11 @@ magnetic encoders, one of which gives wind speed and the other
 direction. As the encoders are the same, an I2C mux is used to read
 from both in sequence (hence the node name).
 
+\note The encoder we use is the AS5600 but it is referred to throughout
+the code as the AMS5600. This was an error carried forward from the library
+I adapted for the project. See the source code for a link to the relevant
+github repo.
+
 \subsubsection Usage
 \verbatim
 $ rosrun bb_sensors i2c_mux
