@@ -1,5 +1,5 @@
 <!-- Launch just the beetlebot sensors -->
 <launch>
 <node name="camera" pkg="bb_sensors" type="camera"/>
-<node name="wind" pkg="bb_sensors" type="i2c_mux"/>
+<node name="wind" pkg="bb_sensors" type="wind_mux"/>
 </launch>

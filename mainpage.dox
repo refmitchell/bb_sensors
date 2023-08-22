@@ -10,7 +10,7 @@ file list (drop down menu above).
 
 List of nodes:
 - \b camera
-- \b i2c_mux
+- \b wind_mux
 - \b pol_op_mux
 - \b pol_op_read
 
@@ -52,13 +52,12 @@ This node does not interact with any ROS services.
 <!-- END: copy for each node -->
 
 
-\subsection i2c_mux i2c_mux
+\subsection wind_mux wind_mux
 
-The i2c_mux node is badly named. This node is reads data from a
-custom-built wind sensor over I2C. The node reads from two AS5600
-magnetic encoders, one of which gives wind speed and the other
-direction. As the encoders are the same, an I2C mux is used to read
-from both in sequence (hence the node name).
+This node is reads data from a custom-built wind sensor over I2C. The
+node reads from two AS5600 magnetic encoders, one of which gives wind
+speed and the other direction. As the encoders are the same, an I2C
+mux is used to read from both in sequence (hence the node name).
 
 \note The encoder we use is the AS5600 but it is referred to throughout
 the code as the AMS5600. This was an error carried forward from the library
@@ -67,7 +66,7 @@ github repo.
 
 \subsubsection Usage
 \verbatim
-$ rosrun bb_sensors i2c_mux
+$ rosrun bb_sensors wind_mux
 \endverbatim
 
 Once the node is started, use rostopic list to check that teh

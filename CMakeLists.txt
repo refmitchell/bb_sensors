@@ -148,7 +148,7 @@ add_library(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/capture_node.cpp)
 add_executable(camera src/camera.cpp)
-add_executable(i2c_mux src/i2c_mux.cpp)
+add_executable(wind_mux src/wind_mux.cpp)
 add_executable(pol_op_read src/pol_op_read.cpp)
 add_executable(pol_op_mux src/pol_op_mux.cpp)
 
@@ -161,7 +161,7 @@ add_executable(pol_op_mux src/pol_op_mux.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(camera ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-add_dependencies(i2c_mux ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(wind_mux ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(pol_op_read ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(pol_op_mux ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
@@ -172,7 +172,7 @@ target_link_libraries(camera
   )
 
 target_link_libraries(
-  i2c_mux
+  wind_mux
   AMS_5600
   ${catkin_LIBRARIES}
   ${OpenCV_LIBS}
